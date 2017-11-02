@@ -16,19 +16,21 @@ Firmware for PiRa Zero board implementing hardware interface functions.
 On boot:
  1. Detect power-up trigger
   * if BCM17 (Timer-EN) is LOW then
-   * Self-enable, if reboot and BCM18 is HIGH
-   * else Timer enable
-   * corner case, reboot due to self enable and timer at the same time, must clear timer in any case
+    * Self-enable, if reboot and BCM18 is HIGH
+    * else Timer enable
+    * corner case, reboot due to self enable and timer at the same time, must clear timer in any case
   * if BCM 22 is LOW then
-   * RTC enable if alarm is high, check via I2C
-   * else enabled due to charging
+    * RTC enable if alarm is high, check via I2C
+    * else enabled due to charging
   * none of the above, handle by resetting all timing soruces
  1. Self-enable GPIO BCM 18 to stay turned on
  1. Reset timing sources
   * assert Done for Timer on BCM27
   * reset RTC alarms
+  
  During operation:
   1. monitor BCM17 and BCM22 for changes, repeat Detect power-up if needed
+  
  On Shutdown:
   1. Check RTC wakeup is at least 30s away from now.
   1. do shutdown

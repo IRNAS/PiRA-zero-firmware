@@ -15,4 +15,4 @@ RUN pip install -r /requirements.txt && \
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 
-CMD ["python", "gpio_example.py"]
+CMD modprobe i2c-dev && python gpio_example.py

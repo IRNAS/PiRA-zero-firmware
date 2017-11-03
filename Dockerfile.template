@@ -18,5 +18,4 @@ WORKDIR /usr/src/app
 # switch on systemd init system in container
 ENV INITSYSTEM on
 
-# setup-i2c.sh will run when container starts up on the device
-CMD ["bash", "setup-i2c.sh"]
+CMD modprobe i2c-dev && python gpio_example.py && python src/sensor.py

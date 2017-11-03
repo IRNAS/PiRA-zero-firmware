@@ -15,9 +15,7 @@ from __future__ import division
 import smbus, os
 from time import sleep
 
-busNumber = int(os.getenv("I2C_BUS"))
-
-bus = smbus.SMBus(busNumber)
+bus = smbus.SMBus(1)
 
 def get_voltage():
     """
@@ -58,4 +56,3 @@ if __name__ == "__main__":
     while True:
         print(get_voltage())
         sleep(5)
-    

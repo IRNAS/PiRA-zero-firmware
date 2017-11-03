@@ -15,6 +15,9 @@ RUN pip install -r /requirements.txt && \
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 
+# switch on systemd init system in container
+ENV INITSYSTEM on
+
 CMD modprobe i2c-dev && python gpio_example.py
 
 # setup-i2c.sh will run when container starts up on the device

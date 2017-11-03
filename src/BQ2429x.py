@@ -20,7 +20,7 @@ import smbus, os
 
 i2c = smbus.SMBus(1)
 
-BQ2429x_I2CADDR 					= 0x0b # default address
+BQ2429x_I2CADDR 					= 0x6b # default address
 BQ2429x_INPUT_CTRL_ADDR 			= 0x00 # Input Source Control Register REG00 [reset = 00110xxx, or 3x]
 BQ2429x_POWERON_CTRL_ADDR 			= 0x01 # Power-On Configuration Register REG01 [reset = 00011011, or 0x1B]
 BQ2429x_CHARGE_CUR_CTRL_ADDR 		= 0x02 # Charge Current Control Register REG02 [reset = 01100000, or 60]
@@ -74,7 +74,6 @@ PRECH_CURRENT_DEFAULT = TERM_CURRENT_DEFAULT = 0001
 class BQ2429x(object):
 	def __init__(self):
 		try:
-											                    # connect to the device
             dummy = i2c.write_quick(BQ2429x_I2CADDR)
 		except:
 			print "Couldn't connect to BQ2429x | I2C init"									# couldn't connect report back
@@ -82,7 +81,7 @@ class BQ2429x(object):
 	# def get_status(self, type_of_status) - gets the type of status you request
 	def get_status(self, type_of_status):
 		try:
-			value = i2c.read_byte(BQ2429x_STATUS_ADDR)								# get the value in 0-255
+			value = i2c.read_byte(BQ2429x_I2CADDR,BQ2429x_STATUS_ADDR)								# get the value in 0-255
 
 			# convert to byte array and remove the 0b part
 			binary_value = bin(value)[2:]
@@ -121,7 +120,7 @@ class BQ2429x(object):
 	def get_faults(self, type_of_fault):
 		try:
 
-			value = i2c.read_byte(BQ2429x_FAULT_ADDR)									# get the 0-255 value
+			value = i2c.read_byte(BQ2429x_I2CADDR,BQ2429x_FAULT_ADDR)									# get the 0-255 value
 
 			binary_value = bin(value)[2:]													# convert to byte array and remove the 0b
 
@@ -160,8 +159,8 @@ class BQ2429x(object):
 
 		try:
 			writing_value = int(str(termination) + str(precharge))									# combine the value and convert to int
-			i2c.write_byte(BQ2429x_PRECHARGE_CTRL_ADDR, writing_value)					    # write to register
-			current_value = i2c.read_byte(BQ2429x_PRECHARGE_CTRL_ADDR)						# read the register
+			i2c.write_byte(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR, writing_value)					    # write to register
+			current_value = i2c.read_byte(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR)						# read the register
 
 			current_value = self.check8bit(current_value)
 
@@ -189,8 +188,8 @@ class BQ2429x(object):
 
 		try:
 			writing_value = int(str(thresh) + str(precharge) + str(c_v_l))							# combine the values and convert to int
-			i2c.write_byte(BQ2429x_CHARGE_VOL_CTRL_ADDR, writing_value)						# write to register
-			current_value = i2c.read_byte(BQ2429x_CHARGE_VOL_CTRL_ADDR)						# read the register
+			i2c.write_byte(BQ2429x_I2CADDR,BQ2429x_CHARGE_VOL_CTRL_ADDR, writing_value)						# write to register
+			current_value = i2c.read_byte(BQ2429x_I2CADDR,BQ2429x_CHARGE_VOL_CTRL_ADDR)						# read the register
 
 			current_value = self.check8bit(current_value)
 

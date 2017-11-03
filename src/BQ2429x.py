@@ -81,7 +81,7 @@ class BQ2429x(object):
 	# def get_status(self, type_of_status) - gets the type of status you request
 	def get_status(self, type_of_status):
 		try:
-			value = i2c.read_byte(BQ2429x_I2CADDR,BQ2429x_STATUS_ADDR)								# get the value in 0-255
+			value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_STATUS_ADDR)								# get the value in 0-255
 
 			# convert to byte array and remove the 0b part
 			binary_value = bin(value)[2:]
@@ -120,7 +120,7 @@ class BQ2429x(object):
 	def get_faults(self, type_of_fault):
 		try:
 
-			value = i2c.read_byte(BQ2429x_I2CADDR,BQ2429x_FAULT_ADDR)									# get the 0-255 value
+			value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_FAULT_ADDR)									# get the 0-255 value
 
 			binary_value = bin(value)[2:]													# convert to byte array and remove the 0b
 
@@ -159,8 +159,8 @@ class BQ2429x(object):
 
 		try:
 			writing_value = int(str(termination) + str(precharge))									# combine the value and convert to int
-			i2c.write_byte(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR, writing_value)					    # write to register
-			current_value = i2c.read_byte(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR)						# read the register
+			i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR, writing_value)					    # write to register
+			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR)						# read the register
 
 			current_value = self.check8bit(current_value)
 
@@ -188,8 +188,8 @@ class BQ2429x(object):
 
 		try:
 			writing_value = int(str(thresh) + str(precharge) + str(c_v_l))							# combine the values and convert to int
-			i2c.write_byte(BQ2429x_I2CADDR,BQ2429x_CHARGE_VOL_CTRL_ADDR, writing_value)						# write to register
-			current_value = i2c.read_byte(BQ2429x_I2CADDR,BQ2429x_CHARGE_VOL_CTRL_ADDR)						# read the register
+			i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_VOL_CTRL_ADDR, writing_value)						# write to register
+			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_VOL_CTRL_ADDR)						# read the register
 
 			current_value = self.check8bit(current_value)
 

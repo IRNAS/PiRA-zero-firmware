@@ -31,7 +31,7 @@ def get_voltage():
 
     # time.sleep(0.1) # Necessary?
     try:
-            address = 0x48
+            address = 0x4d
             # read data from i2c bus. the 0 command is mandatory for the protocol but not used in this chip.
             data = bus.read_word_data(address, 0)
 

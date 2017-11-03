@@ -44,7 +44,7 @@ def get_voltage():
             vratio = (last_4 << 6) | first_6
 
             # Now we can calculate the battery voltage like so:
-            ratio = 0.01818     # this is 0.1/5.5V Still have to find out why...
+            ratio = 0.008063   # calibration value based on measurements
             voltage = vratio * ratio
 
             return "{:.3F}".format(voltage)
@@ -55,4 +55,4 @@ def get_voltage():
 if __name__ == "__main__":
     while True:
         print(get_voltage())
-        sleep(5)
+        sleep(60)

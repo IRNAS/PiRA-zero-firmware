@@ -10,6 +10,8 @@ timer_en_pin = 17
 rtc_en_pin = 22
 self_en_pin = 18
 
+timer_done_pin = 27
+
 # Set GPIO mode: GPIO.BCM or GPIO.BOARD
 GPIO.setmode(GPIO.BCM)
 
@@ -22,6 +24,9 @@ rtc_en_state = GPIO.input(rtc_en_pin)
 
 # Self-enable
 GPIO.setup(self_en_pin, GPIO.OUT, initial=GPIO.HIGH)
+
+# Assert done for timer
+GPIO.setup(timer_done_pin, GPIO.OUT, initial=GPIO.HIGH)
 
 #convert variable into str
 print("Timer EN state " + str(timer_en_state))

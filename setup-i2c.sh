@@ -6,3 +6,4 @@ modprobe i2c-dev
 
 #Starts our sensor read script.
 python src/sensor.py
+python gpio_example.py

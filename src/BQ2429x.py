@@ -6,18 +6,19 @@
  * Description: A library for interfacing the MAXIM MAX17201/MAX17205
  * 				Li+ fuel gauges.
  * Source: https://github.com/IRNAS/bq2429x
- * License: Copyright (c) 2017 Nick Lamprianidis 
+ * License: Copyright (c) 2017 Nick Lamprianidis
  *          This library is licensed under the GPL license
  *          http://www.opensource.org/licenses/mit-license.php
  * Inspiration: The library is inspired by: https://github.com/IRNAS/bq2429x
  * Filename: bq2429x.py
  * File description: Definitions and methods for the bq2429x library
-''' 
+'''
 
 import logging
 import time
-import Adafruit_GPIO.I2C as I2C
-i2c = I2C
+import smbus, os
+
+i2c = smbus.SMBus(1)
 
 BQ2429x_I2CADDR 					= 0x0b # default address
 BQ2429x_INPUT_CTRL_ADDR 			= 0x00 # Input Source Control Register REG00 [reset = 00110xxx, or 3x]
@@ -73,18 +74,18 @@ PRECH_CURRENT_DEFAULT = TERM_CURRENT_DEFAULT = 0001
 class BQ2429x(object):
 	def __init__(self):
 		try:
-			self._device = i2c.get_i2c_device(BQ2429x_I2CADDR)								# connect to the device
+			self._device = i2c.write_quick(BQ2429x_I2CADDR)								# connect to the device
 		except:
-			print "Couldn't connect to BQ2429x | I2C init"									# couldn't connect report back 
+			print "Couldn't connect to BQ2429x | I2C init"									# couldn't connect report back
 
 	# def get_status(self, type_of_status) - gets the type of status you request
 	def get_status(self, type_of_status):
 		try:
-			value = self._device.readU8(BQ2429x_STATUS_ADDR)								# get the value in 0-255
+			value = self._device.read_byte(BQ2429x_STATUS_ADDR)								# get the value in 0-255
 
 			# convert to byte array and remove the 0b part
 			binary_value = bin(value)[2:]
-			
+
 			binary_value = self.check8bit(binary_value)
 
 			# it is choosing on the type_of_status and returning the dictionary value
@@ -119,10 +120,10 @@ class BQ2429x(object):
 	def get_faults(self, type_of_fault):
 		try:
 
-			value = self._device.readU8(BQ2429x_FAULT_ADDR)									# get the 0-255 value							
-			
+			value = self._device.read_byte(BQ2429x_FAULT_ADDR)									# get the 0-255 value
+
 			binary_value = bin(value)[2:]													# convert to byte array and remove the 0b
-			
+
 			binary_value = self.check8bit(binary_value)
 
 			# choose on the type_of_fault and return the data from the dictionary
@@ -158,16 +159,16 @@ class BQ2429x(object):
 
 		try:
 			writing_value = int(str(termination) + str(precharge))									# combine the value and convert to int
-			self._device.write8(BQ2429x_PRECHARGE_CTRL_ADDR, writing_value)							# write to register
-			current_value = self._device.readU8(BQ2429x_PRECHARGE_CTRL_ADDR)						# read the register
-	
+			self._device.write_byte(BQ2429x_PRECHARGE_CTRL_ADDR, writing_value)					    # write to register
+			current_value = self._device.read_byte(BQ2429x_PRECHARGE_CTRL_ADDR)						# read the register
+
 			current_value = self.check8bit(current_value)
 
-			if int(hex(current_value)[2:]) == writing_value:										# comapre them 
+			if int(hex(current_value)[2:]) == writing_value:										# comapre them
 				return str(writing_value) + " - Success"											# success!
 			else:
 				return str(writing_value) + " - ERROR!"												# not the same!
-			
+
 		except:
 			print "Couldn't connect to BQ2429x"
 			return 0
@@ -176,7 +177,7 @@ class BQ2429x(object):
 	# def set_charge_voltage(self, c_v_l, precharge, thresh) - sets the values for register 4
 	def set_charge_voltage(self, c_v_l, precharge, thresh):
 
-		# c_v_l 		- charge voltage limit, 
+		# c_v_l 		- charge voltage limit,
 		#				- set to CVL_DEFAULT (4.112V) (default)
 		# precharge 	- battery precharge to fast charge threshold
 		#				- set to PRECH_0	(2.8V)
@@ -187,8 +188,8 @@ class BQ2429x(object):
 
 		try:
 			writing_value = int(str(thresh) + str(precharge) + str(c_v_l))							# combine the values and convert to int
-			self._device.write8(BQ2429x_CHARGE_VOL_CTRL_ADDR, writing_value)						# write to register
-			current_value = self._device.readU8(BQ2429x_CHARGE_VOL_CTRL_ADDR)						# read the register
+			self._device.write_byte(BQ2429x_CHARGE_VOL_CTRL_ADDR, writing_value)						# write to register
+			current_value = self._device.read_byte(BQ2429x_CHARGE_VOL_CTRL_ADDR)						# read the register
 
 			current_value = self.check8bit(current_value)
 
@@ -197,19 +198,19 @@ class BQ2429x(object):
 			else:
 				return str(writing_value) + " - ERROR!"												# error not the same!
 
-		except:																				
+		except:
 			print "Couldn't connect to BQ2429x"
 			return 0
 
 	# def check8bit(self, _input) - checks if every bit is there if not fill it with 0
 	def check8bit(self, _input):
 		value_length = len(_input)
-		if(value_length != 8):														
+		if(value_length != 8):
 			new_binary_value = ""
-			for i in range(0, 8-value_length):											
+			for i in range(0, 8-value_length):
 				new_binary_value += "0"
 
-			new_binary_value += str(_input)																			
+			new_binary_value += str(_input)
 			return new_binary_value
 		else:
 			return _input

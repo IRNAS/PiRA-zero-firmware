@@ -18,8 +18,6 @@ import logging
 import time
 import smbus, os
 
-i2c = smbus.SMBus(1)
-
 BQ2429x_I2CADDR 					= 0x0b # default address
 BQ2429x_INPUT_CTRL_ADDR 			= 0x00 # Input Source Control Register REG00 [reset = 00110xxx, or 3x]
 BQ2429x_POWERON_CTRL_ADDR 			= 0x01 # Power-On Configuration Register REG01 [reset = 00011011, or 0x1B]
@@ -74,7 +72,8 @@ PRECH_CURRENT_DEFAULT = TERM_CURRENT_DEFAULT = 0001
 class BQ2429x(object):
 	def __init__(self):
 		try:
-			self._device = i2c.write_quick(BQ2429x_I2CADDR)								# connect to the device
+			self._device = smbus.SMBus(1)								                    # connect to the device
+            dummy = self._device.write_quick(BQ2429x_I2CADDR)
 		except:
 			print "Couldn't connect to BQ2429x | I2C init"									# couldn't connect report back
 

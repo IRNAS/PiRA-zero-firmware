@@ -8,6 +8,7 @@ import MCP3021
 import smbus as smbus
 import RPi.GPIO as GPIO
 import time
+import os
 
 
 def main():
@@ -60,6 +61,11 @@ def debug_it_all():
 
 
 if __name__ == '__main__':
+
+    #check system variables
+    #charging action if system should stay on when on charge, default on
+    charging_action=os.getenv('CHARGING_ACTION', 1)
+    print 'CHARGING_ACTION: '+ str(charging_action)
 
     # referencing the sensors
 

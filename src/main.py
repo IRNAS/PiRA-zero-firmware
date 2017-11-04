@@ -93,7 +93,7 @@ if __name__ == '__main__':
     # Assert done for timer
 
     GPIO.setup(timer_done_pin, GPIO.OUT)
-    GPIO.output(timer_done_pin, HIGH)
+    GPIO.output(timer_done_pin, 1)
 
     # convert variable into str
 

@@ -37,7 +37,7 @@ class MCP3021(object):
 
                 # read data from i2c bus. the 0 command is mandatory for the protocol but not used in this chip.
             voltage = 0
-            for x in range(0, 9):
+            for x in range(0, 10):
                 data = i2c.read_word_data(MCP3021_I2CADDR, 0)
 
                     # from this data we need the last 4 bits and the first 6.

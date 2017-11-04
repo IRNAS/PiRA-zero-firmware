@@ -25,7 +25,7 @@ def debug_main():
     print 'BQ2429x  : status - CHRG_STAT : ' \
         + str(sensor_bq.get_status(BQ2429x.CHRG_STAT))
 	print 'BQ2429x  : status - PG_STAT ---- : ' \
-        + str(sensor_bq.get_status(BQ2429x.PG_STAT))
+		+ str(sensor_bq.get_status(BQ2429x.PG_STAT))
     print 'MCP3021  : status - voltage --: ' \
         + str(sensor_mcp.get_voltage()) + 'V'
 

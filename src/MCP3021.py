@@ -21,7 +21,7 @@ import logging
 
 i2c = smbus.SMBus(1)
 
-BQ2429x_I2CADDR = 0x4d  # default address
+MCP3021_I2CADDR = 0x4d  # default address
 
 
 class MCP3021(object):
@@ -34,7 +34,6 @@ class MCP3021(object):
 
     def get_voltage(self):
         try:
-            address = 0x4d
 
                 # read data from i2c bus. the 0 command is mandatory for the protocol but not used in this chip.
 

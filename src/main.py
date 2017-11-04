@@ -12,10 +12,9 @@ import time
 
 def main():
 
-    # debug_main()
-
-    debug_it_all()
-    time.sleep(6)
+    debug_main()
+    #debug_it_all()
+    time.sleep(30)
 
 
 def debug_main():
@@ -25,6 +24,8 @@ def debug_main():
         + str(sensor_bq.get_status(BQ2429x.VBUS_STAT))
     print 'BQ2429x  : status - CHRG_STAT : ' \
         + str(sensor_bq.get_status(BQ2429x.CHRG_STAT))
+	print 'BQ2429x  : status - PG_STAT ---- : ' \
+        + str(sensor_bq.get_status(BQ2429x.PG_STAT))
     print 'MCP3021  : status - voltage --: ' \
         + str(sensor_mcp.get_voltage()) + 'V'
 

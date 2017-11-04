@@ -37,7 +37,8 @@ class MCP3021(object):
 
                 # read data from i2c bus. the 0 command is mandatory for the protocol but not used in this chip.
             voltage = 0
-            for x in range(0, 10):
+            average_count = 50
+            for x in range(0, average_count):
                 data = i2c.read_word_data(MCP3021_I2CADDR, 0)
 
                     # from this data we need the last 4 bits and the first 6.
@@ -55,7 +56,7 @@ class MCP3021(object):
                 ratio = 0.008063  # calibration value based on measurements
                 voltage = voltage + vratio * ratio
 
-            return '{:.3F}'.format(voltage/10)
+            return '{:.3F}'.format(voltage/average_count)
         except:
 
             print("Couldn't connect to MCP3021")

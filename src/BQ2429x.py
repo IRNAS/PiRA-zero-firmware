@@ -74,7 +74,7 @@ PRECH_CURRENT_DEFAULT = TERM_CURRENT_DEFAULT = 0001
 class BQ2429x(object):
 	def __init__(self):
 		try:
-            dummy = i2c.write_quick(BQ2429x_I2CADDR)
+			dummy = i2c.write_quick(BQ2429x_I2CADDR)
 		except:
 			print "Couldn't connect to BQ2429x | I2C init"									# couldn't connect report back
 

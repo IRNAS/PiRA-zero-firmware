@@ -18,4 +18,4 @@ WORKDIR /usr/src/app
 # switch on systemd init system in container
 ENV INITSYSTEM on
 
-CMD modprobe i2c-dev && python gpio_example.py && python src/sensor.py
+CMD modprobe i2c-dev && python src/main.py

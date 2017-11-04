@@ -88,12 +88,12 @@ if __name__ == '__main__':
     # Self-enable
 
     GPIO.setup(self_en_pin, GPIO.OUT)
-    GPIO.write(self_en_pin, 1)
+    GPIO.output(self_en_pin, 1)
 
     # Assert done for timer
 
     GPIO.setup(timer_done_pin, GPIO.OUT)
-    GPIO.write(timer_done_pin, HIGH)
+    GPIO.output(timer_done_pin, HIGH)
 
     # convert variable into str
 

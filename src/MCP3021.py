@@ -32,7 +32,7 @@ class MCP3021(object):
         except:
             print('Could not connect to MCP3021 | I2C init')
 
-    def get_voltage():
+    def get_voltage(self):
         try:
             address = 0x4d
 
@@ -60,7 +60,3 @@ class MCP3021(object):
 
             print("Couldn't connect to MCP3021")
             return 0
-
-
-
-			

@@ -36,25 +36,26 @@ class MCP3021(object):
         try:
 
                 # read data from i2c bus. the 0 command is mandatory for the protocol but not used in this chip.
+            voltage = 0
+            for x in range(0, 9):
+                data = i2c.read_word_data(MCP3021_I2CADDR, 0)
 
-            data = i2c.read_word_data(MCP3021_I2CADDR, 0)
+                    # from this data we need the last 4 bits and the first 6.
 
-                # from this data we need the last 4 bits and the first 6.
+                last_4 = data & 0b1111  # using a bit mask
+                first_6 = data >> 10  # left shift 10 because data is 16 bits
 
-            last_4 = data & 0b1111  # using a bit mask
-            first_6 = data >> 10  # left shift 10 because data is 16 bits
+                    # together they make the voltage conversion ratio
+                    # to make it all easier the last_4 bits are most significant :S
 
-                # together they make the voltage conversion ratio
-                # to make it all easier the last_4 bits are most significant :S
+                vratio = last_4 << 6 | first_6
 
-            vratio = last_4 << 6 | first_6
+                    # Now we can calculate the battery voltage like so:
 
-                # Now we can calculate the battery voltage like so:
+                ratio = 0.008063  # calibration value based on measurements
+                voltage = voltage + vratio * ratio
 
-            ratio = 0.008063  # calibration value based on measurements
-            voltage = vratio * ratio
-
-            return '{:.3F}'.format(voltage)
+            return '{:.3F}'.format(voltage/10)
         except:
 
             print("Couldn't connect to MCP3021")

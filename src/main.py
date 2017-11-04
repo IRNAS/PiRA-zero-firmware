@@ -4,6 +4,7 @@
 import time
 
 import BQ2429x
+import MCP3021
 import smbus as smbus
 import RPi.GPIO as GPIO
 import time

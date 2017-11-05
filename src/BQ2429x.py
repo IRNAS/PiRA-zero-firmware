@@ -180,11 +180,11 @@ class BQ2429x(object):
 		#					- PRECH_CURRENT_DEFAULT (0001)
 
 		try:
-			#current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)						# read the register
+			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)						# read the register
 			#binary_value[3]=timer_en
-			writing_value = int(str(10010010),2)
+			#writing_value = int(str(10010010),2)
 
-			i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR, writing_value)					    # write to register
+			#i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR, writing_value)					    # write to register
 			#current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)						# read the register
 
 			#current_value = self.check8bit(current_value)

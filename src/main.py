@@ -107,7 +107,7 @@ if __name__ == '__main__':
     print 'Timer EN state ' + str(timer_en_state)
     print 'RTC EN state ' + str(rtc_en_state)
 
-    Print 'Disable charge timer '
+    print 'Disable charge timer'
     sensor_bq.set_charge_termination(0)
 
     while 1:

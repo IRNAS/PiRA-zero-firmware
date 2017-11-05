@@ -169,8 +169,9 @@ class BQ2429x(object):
 			else:
 				return str(writing_value) + " - ERROR!"												# not the same!
 
-		except:
+		except Exception as e:
 			print "Couldn't connect to BQ2429x"
+            print(e)
 			return 0
 
 	def set_charge_termination(self, timer_en):

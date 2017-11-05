@@ -171,7 +171,7 @@ class BQ2429x(object):
 
 		except Exception as e:
 		    print (e)
-            return 0
+		    return 0
 
 	def set_charge_termination(self, timer_en):
 		# termination         - Termination current limit,
@@ -184,12 +184,12 @@ class BQ2429x(object):
 			# convert to byte array and remove the 0b part
 			binary_value = bin(value)[2:]
 			binary_value = self.check8bit(binary_value)
-            print "Binary value " + binary_value
+			print "Binary value " + binary_value
 
 			binary_value[3]=timer_en
-            print "Binary value " + binary_value
+			print "Binary value " + binary_value
 			writing_value = int(str(binary_value))
-            print "Binary value " + writing_value
+			print "Binary value " + writing_value
 
 			i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR, writing_value)                        # write to register
 			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)                        # read the register

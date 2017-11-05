@@ -158,7 +158,7 @@ class BQ2429x(object):
 		#					- PRECH_CURRENT_DEFAULT (0001)
 
 		try:
-			writing_value = int(str(termination) + str(precharge))									# combine the value and convert to int
+			writing_value = int(str(termination) + str(precharge),2)									# combine the value and convert to int
 			i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR, writing_value)					    # write to register
 			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR)						# read the register
 
@@ -173,6 +173,31 @@ class BQ2429x(object):
 			print "Couldn't connect to BQ2429x"
 			return 0
 
+    def set_charge_termination(self, timer_en):
+
+		# termination 		- Termination current limit,
+		#					- TERM_CURRENT_DEFAULT (0001)
+		# precharge 		- precharge current limit,
+		#					- PRECH_CURRENT_DEFAULT (0001)
+
+		try:
+			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)						# read the register
+            binary_value[3]=timer_en;
+            writing_value = int(str(binary_value),2)
+
+            i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR, writing_value)					    # write to register
+			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)						# read the register
+
+			current_value = self.check8bit(current_value)
+
+			if int(hex(current_value)[2:]) == writing_value:										# comapre them
+				return str(writing_value) + " - Success"											# success!
+			else:
+				return str(writing_value) + " - ERROR!"												# not the same!
+
+		except:
+			print "Couldn't connect to BQ2429x"
+			return 0
 
 	# def set_charge_voltage(self, c_v_l, precharge, thresh) - sets the values for register 4
 	def set_charge_voltage(self, c_v_l, precharge, thresh):

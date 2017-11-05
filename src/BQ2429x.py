@@ -161,7 +161,6 @@ class BQ2429x(object):
 			writing_value = int(str(termination) + str(precharge))                                    # combine the value and convert to int
 			i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR, writing_value)                        # write to register
 			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR)                        # read the register
-
 			current_value = self.check8bit(current_value)
 
 			if int(hex(current_value)[2:]) == writing_value:                                        # comapre them
@@ -180,17 +179,7 @@ class BQ2429x(object):
 		#                    - PRECH_CURRENT_DEFAULT (0001)
 
 		try:
-			value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)                        # read the register
-			# convert to byte array and remove the 0b part
-			binary_value = bin(value)[2:]
-			binary_value = self.check8bit(binary_value)
-			print "Binary value " + binary_value
-
-			binary_value[3]=timer_en
-			print "Binary value " + binary_value
-			writing_value = int(str(binary_value))
-			print "Binary value " + writing_value
-
+            writing_value = int(str(timer_en))
 			i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR, writing_value)                        # write to register
 			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)                        # read the register
 

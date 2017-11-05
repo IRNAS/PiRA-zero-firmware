@@ -108,9 +108,9 @@ if __name__ == '__main__':
     print 'RTC EN state ' + str(rtc_en_state)
 
     print 'Disable charge timer'
-    sensor_bq.set_charge_termination(0)
+    sensor_bq.set_charge_termination('10010010')
     print 'Configure pre-charge'
-    sensor_bq.set_ter_prech_current(1111,0001)
+    sensor_bq.set_ter_prech_current('1111','0001')
 
     while 1:
         main()

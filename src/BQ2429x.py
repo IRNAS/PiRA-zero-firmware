@@ -51,14 +51,14 @@ vbus_data     = { "00" : "No input", "01" : "USB host", "10" : "Adapter port", "
 
 # fault register values
 ntc_data        = {
-	"000" : "Normal",
-	"001" : "TS1 Cold",
-	"010" : "TS1 Hot",
-	"011" : "TS2 Cold",
-	"100" : "TS2 Hot",
-	"101" : "Both Cold",
-	"110" : "Both Hot",
-	"111" : "Not defined..."
+    "000" : "Normal",
+    "001" : "TS1 Cold",
+    "010" : "TS1 Hot",
+    "011" : "TS2 Cold",
+    "100" : "TS2 Hot",
+    "101" : "Both Cold",
+    "110" : "Both Hot",
+    "111" : "Not defined..."
 }
 bat_data        = { '0' : "Normal", '1' : "BatOVP" }
 chrg_fault_data = { "00" : "Normal", "01" : "Input fault (VBUS OVP or VBAT<VBUS<3.8V)","10" : "Thermal shutdown","11" : "Charge Safety Timer Expiration" }
@@ -72,165 +72,164 @@ PRECH_1    = THRESH_1     = 1
 PRECH_CURRENT_DEFAULT = TERM_CURRENT_DEFAULT = 0001
 
 class BQ2429x(object):
-	def __init__(self):
-		try:
-			dummy = i2c.write_quick(BQ2429x_I2CADDR)
-		except:
-			print "Couldn't connect to BQ2429x | I2C init"                                    # couldn't connect report back
+    def __init__(self):
+        try:
+            dummy = i2c.write_quick(BQ2429x_I2CADDR)
+        except:
+            print "Couldn't connect to BQ2429x | I2C init"                                    # couldn't connect report back
 
-	# def get_status(self, type_of_status) - gets the type of status you request
-	def get_status(self, type_of_status):
-		try:
-			value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_STATUS_ADDR)                                # get the value in 0-255
+    # def get_status(self, type_of_status) - gets the type of status you request
+    def get_status(self, type_of_status):
+        try:
+            value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_STATUS_ADDR)                                # get the value in 0-255
 
-			# convert to byte array and remove the 0b part
-			binary_value = bin(value)[2:]
+            # convert to byte array and remove the 0b part
+            binary_value = bin(value)[2:]
 
-			binary_value = self.check8bit(binary_value)
+            binary_value = self.check8bit(binary_value)
 
-			# it is choosing on the type_of_status and returning the dictionary value
-			if type_of_status == VSYS_STAT:
-				return vsys_data[binary_value[0]]
+            # it is choosing on the type_of_status and returning the dictionary value
+            if type_of_status == VSYS_STAT:
+                return vsys_data[binary_value[0]]
 
-			elif type_of_status == THERM_STAT:
-				return therm_data[binary_value[1]]
+            elif type_of_status == THERM_STAT:
+                return therm_data[binary_value[1]]
 
-			elif type_of_status == PG_STAT:
-				return pg_data[binary_value[2]]
+            elif type_of_status == PG_STAT:
+                return pg_data[binary_value[2]]
 
-			elif type_of_status == DPM_STAT:
-				return dpm_data[binary_value[3]]
+            elif type_of_status == DPM_STAT:
+                return dpm_data[binary_value[3]]
 
-			elif type_of_status == CHRG_STAT:
-				# combining the two to make life easier
-				_stat = str(binary_value[5]) + str(binary_value[4])
-				return chrg_data[_stat]
+            elif type_of_status == CHRG_STAT:
+                # combining the two to make life easier
+                _stat = str(binary_value[5]) + str(binary_value[4])
+                return chrg_data[_stat]
 
-			elif type_of_status == VBUS_STAT:
-				# combining the two to make life easier
-				_stat = str(binary_value[7]) + str(binary_value[6])
-				return vbus_data[_stat]
-
-
-		except:
-			print "Couldn't connect to BQ2429x"
-			return 0
-
-	# def get_faults(self, type_of_fault) - gets the type of fault you request
-	def get_faults(self, type_of_fault):
-		try:
-
-			value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_FAULT_ADDR)                                    # get the 0-255 value
-
-			binary_value = bin(value)[2:]                                                    # convert to byte array and remove the 0b
-
-			binary_value = self.check8bit(binary_value)
-
-			# choose on the type_of_fault and return the data from the dictionary
-			if type_of_fault == NTC_FAULT:
-				_stat = str(binary_value[2]) + str(binary_value[1]) + str(binary_value[0])
-				return ntc_data[_stat]
-
-			elif type_of_fault == BAT_FAULT:
-				return bat_data[binary_value[3]]
-
-			elif type_of_fault == CHRG_FAULT:
-				_stat = str(binary_value[5]) + str(binary_value[4])
-				return chrg_fault_data[_stat]
-
-			elif type_of_fault == BOOST_FAULT:
-				return boost_data[binary_value[6]]
-
-			elif type_of_fault == WATCHDOG_FAULT:
-				return watchdog_data[binary_value[7]]
-
-		except:
-			print "Couldn't connect to BQ2429x"
-			return 0
+            elif type_of_status == VBUS_STAT:
+                # combining the two to make life easier
+                _stat = str(binary_value[7]) + str(binary_value[6])
+                return vbus_data[_stat]
 
 
-	#def set_ter_prech_current(self,termination,precharge) - set the termination and precharge current limit
-	def set_ter_prech_current(self, termination, precharge):
+        except:
+            print "Couldn't connect to BQ2429x"
+            return 0
 
-		# termination         - Termination current limit,
-		#                    - TERM_CURRENT_DEFAULT (0001)
-		# precharge         - precharge current limit,
-		#                    - PRECH_CURRENT_DEFAULT (0001)
+    # def get_faults(self, type_of_fault) - gets the type of fault you request
+    def get_faults(self, type_of_fault):
+        try:
 
-		try:
-			writing_value = int(str(termination) + str(precharge))                                    # combine the value and convert to int
-			i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR, writing_value)                        # write to register
-			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR)                        # read the register
-			current_value = self.check8bit(current_value)
+            value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_FAULT_ADDR)                                    # get the 0-255 value
 
-			if int(hex(current_value)[2:]) == writing_value:                                        # comapre them
-				return str(writing_value) + " - Success"                                            # success!
-			else:
-				return str(writing_value) + " - ERROR!"                                                # not the same!
+            binary_value = bin(value)[2:]                                                    # convert to byte array and remove the 0b
 
-		except Exception as e:
-		    print (e)
-		    return 0
+            binary_value = self.check8bit(binary_value)
 
-	def set_charge_termination(self, timer_en):
-		# termination         - Termination current limit,
-		#                    - TERM_CURRENT_DEFAULT (0001)
-		# precharge         - precharge current limit,
-		#                    - PRECH_CURRENT_DEFAULT (0001)
+            # choose on the type_of_fault and return the data from the dictionary
+            if type_of_fault == NTC_FAULT:
+                _stat = str(binary_value[2]) + str(binary_value[1]) + str(binary_value[0])
+                return ntc_data[_stat]
 
-		try:
+            elif type_of_fault == BAT_FAULT:
+                return bat_data[binary_value[3]]
+
+            elif type_of_fault == CHRG_FAULT:
+                _stat = str(binary_value[5]) + str(binary_value[4])
+                return chrg_fault_data[_stat]
+
+            elif type_of_fault == BOOST_FAULT:
+                return boost_data[binary_value[6]]
+
+            elif type_of_fault == WATCHDOG_FAULT:
+                return watchdog_data[binary_value[7]]
+
+        except:
+            print "Couldn't connect to BQ2429x"
+            return 0
+
+
+    #def set_ter_prech_current(self,termination,precharge) - set the termination and precharge current limit
+    def set_ter_prech_current(self, termination, precharge):
+
+        # termination         - Termination current limit,
+        #                    - TERM_CURRENT_DEFAULT (0001)
+        # precharge         - precharge current limit,
+        #                    - PRECH_CURRENT_DEFAULT (0001)
+
+        try:
+            writing_value = int(str(termination) + str(precharge))                                    # combine the value and convert to int
+            i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR, writing_value)                        # write to register
+            current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR)                        # read the register
+            current_value = self.check8bit(current_value)
+
+            if int(hex(current_value)[2:]) == writing_value:                                        # comapre them
+                return str(writing_value) + " - Success"                                            # success!
+            else:
+                return str(writing_value) + " - ERROR!"                                                # not the same!
+
+        except Exception as e:
+            print (e)
+            return 0
+
+    def set_charge_termination(self, timer_en):
+        # termination         - Termination current limit,
+        #                    - TERM_CURRENT_DEFAULT (0001)
+        # precharge         - precharge current limit,
+        #                    - PRECH_CURRENT_DEFAULT (0001)
+
+        try:
             writing_value = int(str(timer_en))
-			i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR, writing_value)                        # write to register
-			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)                        # read the register
+            i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR, writing_value)                        # write to register
+            current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)                        # read the register
+            current_value = self.check8bit(current_value)
 
-			current_value = self.check8bit(current_value)
+            if int(hex(current_value)[2:]) == writing_value:                                        # comapre them
+                return str(writing_value) + " - Success"                                            # success!
+            else:
+                return str(writing_value) + " - ERROR!"                                                # not the same!
 
-			if int(hex(current_value)[2:]) == writing_value:                                        # comapre them
-				return str(writing_value) + " - Success"                                            # success!
-			else:
-				return str(writing_value) + " - ERROR!"                                                # not the same!
+        except:
+            print "Couldn't connect to BQ2429x"
+            return 0
 
-		except:
-			print "Couldn't connect to BQ2429x"
-			return 0
+    # def set_charge_voltage(self, c_v_l, precharge, thresh) - sets the values for register 4
+    def set_charge_voltage(self, c_v_l, precharge, thresh):
 
-	# def set_charge_voltage(self, c_v_l, precharge, thresh) - sets the values for register 4
-	def set_charge_voltage(self, c_v_l, precharge, thresh):
+        # c_v_l         - charge voltage limit,
+        #                - set to CVL_DEFAULT (4.112V) (default)
+        # precharge     - battery precharge to fast charge threshold
+        #                - set to PRECH_0    (2.8V)
+        #                - set to PRECH_1    (3.0V) (default)
+        # thresh         - battery recharge threshold (below battery regulation voltage)
+        #                - set to THRESH_0     (100mV) (default)
+        #                - set to THRESH_1    (300mV)
 
-		# c_v_l         - charge voltage limit,
-		#                - set to CVL_DEFAULT (4.112V) (default)
-		# precharge     - battery precharge to fast charge threshold
-		#                - set to PRECH_0    (2.8V)
-		#                - set to PRECH_1    (3.0V) (default)
-		# thresh         - battery recharge threshold (below battery regulation voltage)
-		#                - set to THRESH_0     (100mV) (default)
-		#                - set to THRESH_1    (300mV)
+        try:
+            writing_value = int(str(thresh) + str(precharge) + str(c_v_l))                            # combine the values and convert to int
+            i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_VOL_CTRL_ADDR, writing_value)                        # write to register
+            current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_VOL_CTRL_ADDR)                        # read the register
 
-		try:
-			writing_value = int(str(thresh) + str(precharge) + str(c_v_l))                            # combine the values and convert to int
-			i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_VOL_CTRL_ADDR, writing_value)                        # write to register
-			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_VOL_CTRL_ADDR)                        # read the register
+            current_value = self.check8bit(current_value)
 
-			current_value = self.check8bit(current_value)
+            if int(bin(current_value)[2:]) == writing_value:                                        # compare them
+                return str(writing_value) + " - Success"                                            # success
+            else:
+                return str(writing_value) + " - ERROR!"                                                # error not the same!
 
-			if int(bin(current_value)[2:]) == writing_value:                                        # compare them
-				return str(writing_value) + " - Success"                                            # success
-			else:
-				return str(writing_value) + " - ERROR!"                                                # error not the same!
+        except:
+            print "Couldn't connect to BQ2429x"
+            return 0
 
-		except:
-			print "Couldn't connect to BQ2429x"
-			return 0
+    # def check8bit(self, _input) - checks if every bit is there if not fill it with 0
+    def check8bit(self, _input):
+        value_length = len(_input)
+        if(value_length != 8):
+            new_binary_value = ""
+            for i in range(0, 8-value_length):
+                new_binary_value += "0"
 
-	# def check8bit(self, _input) - checks if every bit is there if not fill it with 0
-	def check8bit(self, _input):
-		value_length = len(_input)
-		if(value_length != 8):
-			new_binary_value = ""
-			for i in range(0, 8-value_length):
-				new_binary_value += "0"
-
-			new_binary_value += str(_input)
-			return new_binary_value
-		else:
-			return _input
+            new_binary_value += str(_input)
+            return new_binary_value
+        else:
+            return _input

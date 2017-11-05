@@ -128,14 +128,14 @@ class BQ2429x(object):
 
 			# choose on the type_of_fault and return the data from the dictionary
 			if type_of_fault == NTC_FAULT:
-				_stat = str(binary_value[0]) + str(binary_value[1]) + str(binary_value[2])
+				_stat = str(binary_value[2]) + str(binary_value[1]) + str(binary_value[0])
 				return ntc_data[_stat]
 
 			elif type_of_fault == BAT_FAULT:
 				return bat_data[binary_value[3]]
 
 			elif type_of_fault == CHRG_FAULT:
-				_stat = str(binary_value[4]) + str(binary_value[5])
+				_stat = str(binary_value[5]) + str(binary_value[4])
  				return chrg_fault_data[_stat]
 
 			elif type_of_fault == BOOST_FAULT:

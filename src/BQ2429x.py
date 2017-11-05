@@ -181,7 +181,7 @@ class BQ2429x(object):
 
 		try:
 			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)						# read the register
-			binary_value[3]=timer_en;
+			binary_value[3]=timer_en
 			writing_value = int(str(binary_value),2)
 
 			i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR, writing_value)					    # write to register

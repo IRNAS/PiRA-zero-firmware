@@ -160,8 +160,8 @@ class BQ2429x(object):
         try:
             writing_value = int(str(termination) + str(precharge))                                    # combine the value and convert to int
             i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR, writing_value)                        # write to register
-            #current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR)                        # read the register
-            #current_value = self.check8bit(current_value)
+            current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_PRECHARGE_CTRL_ADDR)                        # read the register
+            current_value = self.check8bit(current_value)
 
             #if int(hex(current_value)[2:]) == writing_value:                                        # comapre them
             #    return str(writing_value) + " - Success"                                            # success!
@@ -180,14 +180,14 @@ class BQ2429x(object):
 
         try:
             writing_value = int(str(timer_en))
-            #i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR, writing_value)                        # write to register
-            #current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)                        # read the register
-            #current_value = self.check8bit(current_value)
+            i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR, writing_value)                        # write to register
+            current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)                        # read the register
+            current_value = self.check8bit(current_value)
 
-            if int(hex(current_value)[2:]) == writing_value:                                        # comapre them
-                return str(writing_value) + " - Success"                                            # success!
-            else:
-                return str(writing_value) + " - ERROR!"                                                # not the same!
+            #if int(hex(current_value)[2:]) == writing_value:                                        # comapre them
+            #    return str(writing_value) + " - Success"                                            # success!
+            #else:
+            #    return str(writing_value) + " - ERROR!"                                                # not the same!
 
         except:
             print "Couldn't connect to BQ2429x"

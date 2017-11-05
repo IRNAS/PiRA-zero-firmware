@@ -181,13 +181,13 @@ class BQ2429x(object):
 
 		try:
 			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)						# read the register
-			binary_value[3]=timer_en
-			writing_value = int(str(binary_value),2)
+			#binary_value[3]=timer_en
+			#writing_value = int(str(binary_value),2)
 
-			i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR, writing_value)					    # write to register
-			current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)						# read the register
+			#i2c.write_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR, writing_value)					    # write to register
+			#current_value = i2c.read_byte_data(BQ2429x_I2CADDR,BQ2429x_CHARGE_TERM_CTRL_ADDR)						# read the register
 
-			current_value = self.check8bit(current_value)
+			#current_value = self.check8bit(current_value)
 
 			if int(hex(current_value)[2:]) == writing_value:										# comapre them
 				return str(writing_value) + " - Success"											# success!

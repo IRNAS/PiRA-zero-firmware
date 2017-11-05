@@ -29,8 +29,6 @@ def debug_main():
         + str(sensor_bq.get_status(BQ2429x.PG_STAT))
     print 'MCP3021  : status - voltage --: ' \
         + str(sensor_mcp.get_voltage()) + 'V'
-    print 'Disable charge timer'
-    sensor_bq.set_charge_termination(0)
 
 
 def debug_it_all():
@@ -109,7 +107,8 @@ if __name__ == '__main__':
     print 'Timer EN state ' + str(timer_en_state)
     print 'RTC EN state ' + str(rtc_en_state)
 
-
+    print 'Disable charge timer'
+    sensor_bq.set_charge_termination(0)
 
     while 1:
         main()

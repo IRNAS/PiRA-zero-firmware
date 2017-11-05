@@ -171,7 +171,7 @@ class BQ2429x(object):
 
 		except Exception as e:
 		    print (e)
-			return 0
+            return 0
 
 	def set_charge_termination(self, timer_en):
 		# termination         - Termination current limit,

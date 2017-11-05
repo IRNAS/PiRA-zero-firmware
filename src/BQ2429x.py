@@ -103,12 +103,12 @@ class BQ2429x(object):
 
 			elif type_of_status == CHRG_STAT:
 				# combining the two to make life easier
-				_stat = str(binary_value[4]) + str(binary_value[5])
+				_stat = str(binary_value[5]) + str(binary_value[4])
 				return chrg_data[_stat]
 
 			elif type_of_status == VBUS_STAT:
 				# combining the two to make life easier
-				_stat = str(binary_value[6]) + str(binary_value[7])
+				_stat = str(binary_value[7]) + str(binary_value[6])
 				return vbus_data[_stat]
 
 

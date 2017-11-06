@@ -23,7 +23,7 @@ def main():
     if sensor_bq.get_status(BQ2429x.CHRG_STAT) == 00 and \
        os.environ['CHARGING_ACTION'] == 1:
         resin.models.supervisor.shutdown(device_uuid=os.environ['RESIN_DEVICE_UUID'], app_id=os.environ['RESIN_APP_ID'])
-
+        print 'Shutting down as scheduled.'
 
 def debug_main():
 

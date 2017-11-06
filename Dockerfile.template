@@ -3,6 +3,9 @@ FROM resin/%%RESIN_MACHINE_NAME%%-python:latest
 #switch on systemd init system in container
 ENV INITSYSTEM on
 
+# Set the working directory
+WORKDIR /usr/src/app
+
 # pip install python deps from requirements.txt
 # For caching until requirements.txt changes
 COPY ./requirements.txt /requirements.txt
@@ -24,10 +27,7 @@ RUN curl https://api.github.com/repos/resin-io/resin-wifi-connect/releases/lates
     | xargs -n1 curl -Ls \
     | tar -xvz -C /usr/src/app/
 
-COPY . /usr/src/app
-WORKDIR /usr/src/app
-
-# switch on systemd init system in container
-ENV INITSYSTEM on
+# Copy everything into the container
+COPY . ./
 
 CMD ["bash", "start.sh"]

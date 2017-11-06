@@ -26,7 +26,7 @@ def main():
         print 'Shutting down as scheduled.'
     ## Go to sleep if charging is not connected
     if sensor_bq.get_status(BQ2429x.CHRG_STAT) == "No input":
-        print 'No input detected: ' = sensor_bq.get_status(BQ2429x.CHRG_STAT)
+        print 'No input detected: '+ sensor_bq.get_status(BQ2429x.CHRG_STAT)
     ## Go to sleep if charging is not connected
     if os.environ['CHARGING_ACTION'] == '1':
         print 'env variable detected: ' + os.environ['CHARGING_ACTION']

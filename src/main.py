@@ -157,9 +157,11 @@ if __name__ == '__main__':
         while 1:
             main()
     except Exception as e:
+        print "other error"
         print(e)
     finally:
-        GPIO.cleanup()
+        #GPIO.cleanup() # must not be used as it disables the self-enable
+        print "Exiting..."
         # shut down if there is an error, disabled for debugging
         #resin.models.supervisor.shutdown(device_uuid=os.environ['RESIN_DEVICE_UUID'], app_id=os.environ['RESIN_APP_ID'])
         #print 'Shutting down due to an error.

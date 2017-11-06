@@ -69,55 +69,64 @@ def debug_it_all():
 
 if __name__ == '__main__':
 
-    #check system variables
-    #charging action if system should stay on when on charge, default on
-    charging_action=os.getenv('CHARGING_ACTION', 1)
-    print 'CHARGING_ACTION: '+ str(charging_action)
+    try:
+        #check system variables
+        #charging action if system should stay on when on charge, default on
+        charging_action=os.getenv('CHARGING_ACTION', 1)
+        print 'CHARGING_ACTION: '+ str(charging_action)
 
-    # referencing the sensors
+        # referencing the sensors
 
-    sensor_bq = BQ2429x.BQ2429x()
-    sensor_mcp = MCP3021.MCP3021()
+        sensor_bq = BQ2429x.BQ2429x()
+        sensor_mcp = MCP3021.MCP3021()
 
-    # configure GPIOs
+        # configure GPIOs
 
-    timer_en_pin = 17
-    rtc_en_pin = 22
-    self_en_pin = 18
+        timer_en_pin = 17
+        rtc_en_pin = 22
+        self_en_pin = 18
 
-    timer_done_pin = 27
+        timer_done_pin = 27
 
-    # Set GPIO mode: GPIO.BCM or GPIO.BOARD
+        # Set GPIO mode: GPIO.BCM or GPIO.BOARD
 
-    GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarning(False)
 
-    GPIO.setup(timer_en_pin, GPIO.IN)
-    GPIO.setup(rtc_en_pin, GPIO.IN)
+        GPIO.setup(timer_en_pin, GPIO.IN)
+        GPIO.setup(rtc_en_pin, GPIO.IN)
 
-    # Check for power-up scenario
+        # Check for power-up scenario
 
-    timer_en_state = GPIO.input(timer_en_pin)
-    rtc_en_state = GPIO.input(rtc_en_pin)
+        timer_en_state = GPIO.input(timer_en_pin)
+        rtc_en_state = GPIO.input(rtc_en_pin)
 
-    # Self-enable
+        # Self-enable
 
-    GPIO.setup(self_en_pin, GPIO.OUT)
-    GPIO.output(self_en_pin, 1)
+        GPIO.setup(self_en_pin, GPIO.OUT)
+        GPIO.output(self_en_pin, 1)
 
-    # Assert done for timer
+        # Assert done for timer
 
-    GPIO.setup(timer_done_pin, GPIO.OUT)
-    GPIO.output(timer_done_pin, 1)
+        GPIO.setup(timer_done_pin, GPIO.OUT)
+        GPIO.output(timer_done_pin, 1)
 
-    # convert variable into str
+        # convert variable into str
 
-    print 'Timer EN state ' + str(timer_en_state)
-    print 'RTC EN state ' + str(rtc_en_state)
+        print 'Timer EN state ' + str(timer_en_state)
+        print 'RTC EN state ' + str(rtc_en_state)
 
-    print 'Disable charge timer'
-    sensor_bq.set_charge_termination(10010010)
-    print 'Configure pre-charge'
-    sensor_bq.set_ter_prech_current(1111,0001)
+        print 'Disable charge timer'
+        sensor_bq.set_charge_termination(10010010)
+        print 'Configure pre-charge'
+        sensor_bq.set_ter_prech_current(1111,0001)
 
-    while 1:
-        main()
+        while 1:
+            main()
+    except:
+        print 'Other error'
+    finally:
+        GPIO.cleanup()
+        # shut down if there is an error, disabled for debugging
+        #resin.models.supervisor.shutdown(device_uuid=os.environ['RESIN_DEVICE_UUID'], app_id=os.environ['RESIN_APP_ID'])
+        #print 'Shutting down due to an error.

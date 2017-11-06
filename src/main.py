@@ -108,6 +108,9 @@ if __name__ == '__main__':
         GPIO.setup(timer_en_pin, GPIO.IN)
         GPIO.setup(rtc_en_pin, GPIO.IN)
 
+
+        GPIO.setup(self_en_pin, GPIO.OUT)
+
         # Check for power-up scenario
 
         timer_en_state = GPIO.input(timer_en_pin)
@@ -136,8 +139,6 @@ if __name__ == '__main__':
             boot_reason = 0
 
         # Self-enable
-
-        GPIO.setup(self_en_pin, GPIO.OUT)
         GPIO.output(self_en_pin, 1)
 
         # Assert done for timer

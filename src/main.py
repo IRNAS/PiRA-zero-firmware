@@ -91,7 +91,7 @@ if __name__ == '__main__':
         # Set GPIO mode: GPIO.BCM or GPIO.BOARD
 
         GPIO.setmode(GPIO.BCM)
-        GPIO.setwarning(False)
+        GPIO.setwarnings(False)
 
         GPIO.setup(timer_en_pin, GPIO.IN)
         GPIO.setup(rtc_en_pin, GPIO.IN)
@@ -123,8 +123,8 @@ if __name__ == '__main__':
 
         while 1:
             main()
-    except:
-        print 'Other error'
+    except Exception as e:
+        print 'Other error' + e
     finally:
         GPIO.cleanup()
         # shut down if there is an error, disabled for debugging

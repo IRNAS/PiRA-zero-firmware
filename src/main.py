@@ -9,6 +9,8 @@ import smbus as smbus
 import RPi.GPIO as GPIO
 import time
 import os
+from resin import Resin
+resin = Resin()
 
 
 def main():
@@ -16,6 +18,7 @@ def main():
     debug_main()
     # debug_it_all()
     time.sleep(30)
+    resin.models.supervisor.shutdown(device_uuid=os.environ['RESIN_DEVICE_UUID'], app_id=os.environ['RESIN_APP_ID'])
 
 
 def debug_main():

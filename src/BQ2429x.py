@@ -164,7 +164,7 @@ class BQ2429x(object):
             #current_value = self.check8bit(current_value)
 
         except Exception as e:
-            print (e)
+            print "Couldn't connect to BQ2429x"
             return 0
 
     def set_charge_termination(self, timer_en):

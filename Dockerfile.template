@@ -8,10 +8,15 @@ ENV INITSYSTEM on
 COPY ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt && \
    apt-get update && apt-get install -yq \
-   i2c-tools python-smbus && \
+   i2c-tools python-smbus && dnsmasq && \
    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip install git+https://github.com/resin-io/resin-sdk-python.git
+
+RUN curl https://api.github.com/repos/resin-io/resin-wifi-connect/releases/latest -s \
+    | grep -hoP 'browser_download_url": "\K.*%%RESIN_ARCH%%\.tar\.gz' \
+    | xargs -n1 curl -Ls \
+    | tar -xvz -C /usr/src/app/
 
 COPY . /usr/src/app
 WORKDIR /usr/src/app
@@ -19,4 +24,4 @@ WORKDIR /usr/src/app
 # switch on systemd init system in container
 ENV INITSYSTEM on
 
-CMD modprobe i2c-dev && python src/main.py
+CMD ["bash", "start.sh"]

@@ -107,8 +107,9 @@ if __name__ == '__main__':
         GPIO.setup(timer_en_pin, GPIO.IN)
         GPIO.setup(rtc_en_pin, GPIO.IN)
 
-
+        # Self-enable
         GPIO.setup(self_en_pin, GPIO.OUT)
+        GPIO.output(self_en_pin, 1)
 
         # Check for power-up scenario
 
@@ -118,13 +119,9 @@ if __name__ == '__main__':
         if timer_en_state == 0 and \
            rtc_en_state == 1:
             # boot from either timer of self
-            # check charger status
-            if GPIO.input(self_en_pin) == 0:
-                # boot due to timer
-                boot_reason = 2
-            else:
-                # boot due to Self-enable
-                boot_reason = 1
+            # figure out method for detection of the two later
+            # boot due to Self-enable or timer
+            boot_reason = 2
         elif timer_en_state == 1 and \
              rtc_en_state == 0:
             if sensor_bq.get_status(BQ2429x.CHRG_STAT) == "Not charging":
@@ -136,9 +133,6 @@ if __name__ == '__main__':
         else:
             #unknown boot reason
             boot_reason = 0
-
-        # Self-enable
-        GPIO.output(self_en_pin, 1)
 
         # Assert done for timer
 

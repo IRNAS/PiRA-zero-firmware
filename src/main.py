@@ -157,7 +157,7 @@ if __name__ == '__main__':
         while 1:
             main()
     except Exception as e:
-        print 'Other error' + e
+        print(e)
     finally:
         GPIO.cleanup()
         # shut down if there is an error, disabled for debugging

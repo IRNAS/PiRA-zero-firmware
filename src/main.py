@@ -12,6 +12,8 @@ import os
 from resin import Resin
 resin = Resin()
 
+# unknown booot reason init
+boot_reason = 0
 
 def main():
 
@@ -24,6 +26,8 @@ def main():
        os.environ['CHARGING_ACTION'] == '1':
         resin.models.supervisor.shutdown(device_uuid=os.environ['RESIN_DEVICE_UUID'], app_id=os.environ['RESIN_APP_ID'])
         print 'Shutting down as scheduled.'
+
+    ## implement monitor pin for timer alarms and clear them in real time
 
 def debug_main():
 
@@ -66,6 +70,14 @@ def debug_it_all():
     print 'MCP3021  : status - voltage -----: ' \
         + str(sensor_mcp.get_voltage())
 
+# determining what the surce of booting was
+boot_reason_data = {
+    0 : "unknown",
+    1 : "Self enable",
+    2 : "Timer enable",
+    3 : "Power enable",
+    4 : "RTC enable"
+}
 
 if __name__ == '__main__':
 
@@ -101,6 +113,28 @@ if __name__ == '__main__':
         timer_en_state = GPIO.input(timer_en_pin)
         rtc_en_state = GPIO.input(rtc_en_pin)
 
+        if timer_en_state == 0 and \
+           rtc_en_state == 1:
+            # boot from either timer of self
+            # check charger status
+            if GPIO.input(self_en_pin) == 0:
+                # boot due to timer
+                boot_reason = 2
+            else:
+                # boot due to Self-enable
+                boot_reason = 1
+        elif timer_en_state == 1 and \
+             rtc_en_state == 0:
+            if sensor_bq.get_status(BQ2429x.CHRG_STAT) == "Not charging":
+                #boot due to RTC
+                boot_reason = 4
+            else:
+                # boot due to power enable
+                boot_reason = 3
+        else:
+            #unknown boot reason
+            boot_reason = 0
+
         # Self-enable
 
         GPIO.setup(self_en_pin, GPIO.OUT)
@@ -113,8 +147,7 @@ if __name__ == '__main__':
 
         # convert variable into str
 
-        print 'Timer EN state ' + str(timer_en_state)
-        print 'RTC EN state ' + str(rtc_en_state)
+        print 'Boot source ' + boot_reason_data[boot_reason]
 
         print 'Disable charge timer'
         sensor_bq.set_charge_termination(10010010)

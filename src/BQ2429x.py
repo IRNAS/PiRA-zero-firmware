@@ -42,28 +42,59 @@ THERM_STAT = BAT_FAULT                = 1
 VSYS_STAT = NTC_FAULT                = 0
 
 # status register values
-vsys_data     = { '0' : "BAT > VSYSMIN", '1' : "BAT < VSYSMIN" }
-therm_data     = { '0' : "Normal status" ,  '1' : "In thermal regulation" }
-pg_data     = { '0' : "Not good power", '1' : "Power good" }
-dpm_data     = { '0' : "Not DPM", '1' : "VINDPM or IINDPM" }
-chrg_data     = { "00" : "Not charging", "01" : "Pre-charger", "10" : "Fast charging", "11" : "Charge termination done" }
-vbus_data     = { "00" : "No input", "01" : "USB host", "10" : "Adapter port", "11" : "OTG" }
-
-# fault register values
-ntc_data        = {
-    "000" : "Normal",
-    "001" : "TS1 Cold",
-    "010" : "TS1 Hot",
-    "011" : "TS2 Cold",
-    "100" : "TS2 Hot",
-    "101" : "Both Cold",
-    "110" : "Both Hot",
-    "111" : "Not defined..."
+vsys_data = {
+    '0' : "BAT > VSYSMIN",
+    '1' : "BAT < VSYSMIN"
 }
-bat_data        = { '0' : "Normal", '1' : "BatOVP" }
-chrg_fault_data = { "00" : "Normal", "01" : "Input fault (VBUS OVP or VBAT<VBUS<3.8V)","10" : "Thermal shutdown","11" : "Charge Safety Timer Expiration" }
-boost_data         = { '0' : "Normal", '1' : "VBUS overloaded or VBUS OVP in boost mode" }
-watchdog_data    = { '0' : "Normal", '1' : "Watchdog timer expiration" }
+therm_data = {
+    '0' : "Normal status" ,
+    '1' : "In thermal regulation"
+}
+pg_data = {
+    '0' : "Not good power",
+    '1' : "Power good"
+}
+dpm_data = {
+    '0' : "Not DPM",
+    '1' : "VINDPM or IINDPM"
+}
+chrg_data = {
+    "00" : "Not charging",
+    "01" : "Pre-charger",
+    "10" : "Fast charging",
+    "11" : "Charge termination done"
+}
+vbus_data = {
+    "00" : "No input",
+    "01" : "USB host",
+    "10" : "Adapter port",
+    "11" : "OTG"
+}
+# fault register values
+ntc_data = {
+    "00" : "Normal",
+    "01" : "NTC hot",
+    "10" : "NTC cold",
+    "11" : "NTC hot/cold error",
+}
+bat_data = {
+        '0' : "Normal",
+        '1' : "BatOVP"
+}
+chrg_fault_data = {
+    "00" : "Normal",
+    "01" : "Input fault (VBUS OVP or VBAT<VBUS<3.8V)",
+    "10" : "Thermal shutdown",
+    "11" : "Charge Safety Timer Expiration"
+}
+boost_data = {
+    '0' : "Normal",
+    '1' : "VBUS overloaded or VBUS OVP in boost mode" 
+}
+watchdog_data = {
+    '0' : "Normal",
+    '1' : "Watchdog timer expiration"
+}
 
 CVL_DEFAULT            = 100110
 PRECH_0 = THRESH_0     = 0

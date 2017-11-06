@@ -53,7 +53,7 @@ class MCP3021(object):
 
                     # Now we can calculate the battery voltage like so:
 
-                ratio = 0.008063  # calibration value based on measurements
+                ratio = 0.0211  # calibration value based on measurements
                 voltage = voltage + vratio * ratio
 
             return '{:.3F}'.format(voltage/average_count)

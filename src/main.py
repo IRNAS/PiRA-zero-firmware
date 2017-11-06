@@ -18,7 +18,11 @@ def main():
     debug_main()
     # debug_it_all()
     time.sleep(30)
-    resin.models.supervisor.shutdown(device_uuid=os.environ['RESIN_DEVICE_UUID'], app_id=os.environ['RESIN_APP_ID'])
+
+    ## Go to sleep if charging is not connected
+    if sensor_bq.get_status(BQ2429x.CHRG_STAT) == 00 and \
+       os.environ['CHARGING_ACTION'] == 1:
+        resin.models.supervisor.shutdown(device_uuid=os.environ['RESIN_DEVICE_UUID'], app_id=os.environ['RESIN_APP_ID'])
 
 
 def debug_main():

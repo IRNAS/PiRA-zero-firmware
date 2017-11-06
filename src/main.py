@@ -20,7 +20,7 @@ def main():
     time.sleep(30)
 
     ## Go to sleep if charging is not connected
-    if sensor_bq.get_status(BQ2429x.CHRG_STAT) == 00 and \
+    if sensor_bq.get_status(BQ2429x.CHRG_STAT) == "No input" and \
        os.environ['CHARGING_ACTION'] == 1:
         resin.models.supervisor.shutdown(device_uuid=os.environ['RESIN_DEVICE_UUID'], app_id=os.environ['RESIN_APP_ID'])
         print 'Shutting down as scheduled.'

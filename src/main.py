@@ -23,7 +23,7 @@ def main():
 
     ## Go to sleep if charging is not connected
     if sensor_bq.get_status(BQ2429x.CHRG_STAT) == "Not charging" and \
-       os.environ['CHARGING_ACTION'] == '1':
+       os.environ['SLEEP_WHEN_CHARGING'] == '1':
         resin.models.supervisor.shutdown(device_uuid=os.environ['RESIN_DEVICE_UUID'], app_id=os.environ['RESIN_APP_ID'])
         print 'Shutting down as scheduled.'
 
@@ -84,8 +84,7 @@ if __name__ == '__main__':
     try:
         #check system variables
         #charging action if system should stay on when on charge, default on
-        charging_action=os.getenv('CHARGING_ACTION', 1)
-        print 'CHARGING_ACTION: '+ str(charging_action)
+        charging_action=os.getenv('SLEEP_WHEN_CHARGING', 1)
 
         # referencing the sensors
 
@@ -148,7 +147,7 @@ if __name__ == '__main__':
 
         # convert variable into str
 
-        print 'Boot source ' + boot_reason_data[boot_reason]
+        print 'Boot source: ' + boot_reason_data[boot_reason]
 
         print 'Disable charge timer'
         sensor_bq.set_charge_termination(10010010)

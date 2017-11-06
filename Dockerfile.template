@@ -9,8 +9,9 @@ COPY ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt && \
    apt-get update && apt-get install -yq \
    i2c-tools python-smbus && \
-   git+https://github.com/resin-io/resin-sdk-python.git && \
    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN pip install git+https://github.com/resin-io/resin-sdk-python.git
 
 COPY . /usr/src/app
 WORKDIR /usr/src/app

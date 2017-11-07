@@ -5,7 +5,7 @@ modprobe i2c-dev
 
 # Start resin-wifi-connect
 export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
-./wifi-connect --clear=false
+./wifi-connect --clear=false &
 
 echo "wifi script started, running gpio"
 

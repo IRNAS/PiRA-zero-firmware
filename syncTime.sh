@@ -5,34 +5,8 @@
 #
 
 
-get_rtc_time()
-{
-  local rtc_ts=$(get_rtc_timestamp)
-  if [ "$rtc_ts" == "" ] ; then
-    echo 'N/A'
-  else
-    echo $(date +'%a %d %b %Y %H:%M:%S %Z' -d @$rtc_ts)
-  fi
-}
-
-get_sys_time()
-{
-  echo $(date +'%a %d %b %Y %H:%M:%S %Z')
-}
-
-get_rtc_timestamp()
-{
-  load_rtc
-  LANG=C
-  local rtctime=$(hwclock | awk '{$6=$7="";print $0}');
-  unload_rtc
-  if [ "$rtctime" == "" ] ; then
-    echo ''
-  else
-    local rtctimestamp=$(date -d "$rtctime" +%s)
-    echo $rtctimestamp
-  fi
-}
+# utilities
+. "$cur_dir/utilities.sh"
 
 # get RTC time
 rtctime="$(get_rtc_time)"

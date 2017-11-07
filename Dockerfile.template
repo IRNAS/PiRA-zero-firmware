@@ -16,6 +16,20 @@ RUN pip install -r /requirements.txt && \
 
 RUN pip install git+https://github.com/resin-io/resin-sdk-python.git
 
+# pigpio https://github.com/lachatak/rpi-pigpio/blob/master/Dockerfile
+
+RUN git clone https://github.com/joan2937/pigpio
+WORKDIR /usr/src/app/pigpio
+RUN make
+RUN make install
+RUN ln -s /usr/local/lib/libpigpio.so /usr/lib/libpigpio.so
+RUN mkdir -p  /etc/svscan/pigpiod
+RUN echo "#!/bin/bash\nif [ ! -f /var/run/pigpio.pid ]; then\n	echo 'Starting'\n	exec /usr/src/app/pigpio/pigpiod\nfi" > /etc/svscan/pigpiod/run
+RUN chmod +x /etc/svscan/pigpiod/run
+
+WORKDIR  /usr/src/app
+
+
 # Use apt-get to install dependencies
 RUN apt-get update && apt-get install -yq --no-install-recommends \
     dnsmasq && \

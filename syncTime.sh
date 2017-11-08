@@ -6,7 +6,7 @@
 
 
 # utilities
-. "$cur_dir/utilities.sh"
+. "/utilities.sh"
 
 # get RTC time
 rtctime="$(get_rtc_time)"

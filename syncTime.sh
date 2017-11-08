@@ -13,6 +13,10 @@ if [ -z "$my_dir" ] ; then
 fi
 . $my_dir/utilities.sh
 
+# if RTC presents
+is_rtc_connected
+has_rtc=$?  # should be 0 if RTC presents
+
 # get RTC time
 rtctime="$(get_rtc_time)"
 

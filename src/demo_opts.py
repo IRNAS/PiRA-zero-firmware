@@ -1,32 +1,3 @@
-
-Skip to content
-This repository
-
-    Pull requests
-    Issues
-    Marketplace
-    Explore
-
-    @SloMusti
-
-5
-33
-
-    14
-
-rm-hull/luma.examples
-Code
-Issues 6
-Pull requests 0
-Projects 0
-Wiki
-Insights
-luma.examples/examples/demo_opts.py
-a6d5ba7 3 days ago
-@rm-hull rm-hull Chmod +x examples
-@rm-hull
-@thijstriemstra
-executable file 58 lines (43 sloc) 1.36 KB
 # -*- coding: utf-8 -*-
 # Copyright (c) 2014-17 Richard Hull and contributors
 # See LICENSE.rst for details.
@@ -49,6 +20,7 @@ logging.getLogger("PIL").setLevel(logging.ERROR)
 def display_settings(args):
     """
     Display a short summary of the settings.
+
     :rtype: str
     """
     iface = ''
@@ -83,17 +55,3 @@ def get_device(actual_args=None):
     print(display_settings(args))
 
     return device
-
-    © 2017 GitHub, Inc.
-    Terms
-    Privacy
-    Security
-    Status
-    Help
-
-    Contact GitHub
-    API
-    Training
-    Shop
-    Blog
-    About

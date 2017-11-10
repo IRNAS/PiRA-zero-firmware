@@ -7,11 +7,11 @@ Firmware for PiRa Zero board implementing hardware interface functions.
  * ADC MCP3021 I2C
  * Display SSD1306 I2C
  * RFM95 Lora SPI
- 
+
 ## Board support package
  * GPIO for power scheduling
  * GPIO for power output
- 
+
 ### Power scheduling
 On boot:
  1. Detect power-up trigger
@@ -27,14 +27,14 @@ On boot:
  1. Reset timing sources
   * assert Done for Timer on BCM27
   * reset RTC alarms
-  
+
  During operation:
   1. monitor BCM17 and BCM22 for changes, repeat Detect power-up if needed
-  
+
  On Shutdown:
   1. Check RTC wakeup is at least 30s away from now.
   1. do shutdown
-  
+
 
 ### Application specific features
  1. Capture camera image and check for daylight/minimal light in image (maybe https://github.com/pageauc/pi-timolo)
@@ -43,3 +43,23 @@ On boot:
  1. Measure distance with MB7092XL-MaxSonar-WRMA1
  1. Send data to TheThingsNetwork
  1. Send data over RockBlock Iridium modem
+
+## Supported environment variables
+
+The following environment variables can be used to configure the firmware:
+
+* Global
+  * `SLEEP_WHEN_CHARGING` (default `0`) when set to `1` the unit will sleep while it is charging.
+  * `SLEEP_NEVER` (default `0`) when set to `1` the unit will never go to sleep.
+  * `WIFI_WHEN_NOT_CHARGING` (default `1`) when set to `0` wifi will be disable while not charging.
+* Scheduler
+  * `SCHEDULE_START` (default `08:00`)
+  * `SCHEDULE_END` (default `18:00`)
+  * `SCHEDULE_T_ON` (default `15`)
+  * `SCHEDULE_T_OFF` (default `35`)
+* Camera
+  * `CAMERA_RESOLUTION` (default `1280x720`)
+  * `CAMERA_VIDEO_DURATION` (default `until-sleep`)
+  * `CAMERA_MIN_LIGHT_LEVEL` (default `0.0`)
+* Rockblock
+  * `ROCKBLOCK_REPORT_INTERVAL` (default `24`)

@@ -3,18 +3,17 @@
 # Enable i2c - needed for the Display-O-Tron HAT
 modprobe i2c-dev
 
-# Start resin-wifi-connect
+# Enable camera driver.
+modprobe bcm2835-v4l2
+
+# Setup host DBUS socket location, which is needed for NetworkManager.
 export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
-./wifi-connect --clear=false &
 
-./syncTime.sh &
+# Sync clock from RTC module.
+./scripts/sync_time.sh
 
-echo "wifi script started, running gpio"
+# Start the pigpio daemon.
+systemctl start pigpiod
 
-# At this point the WiFi connection has been configured and the device has
-# internet - unless the configured WiFi connection is no longer available.
-
-# Start the main application
-python src/main.py
-
-wait
+# Start the main application.
+python -m pira.main

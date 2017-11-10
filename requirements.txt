@@ -1,2 +1,9 @@
-RPi.Gpio
-future
+RPi.GPIO==0.6.3
+future==0.16.0
+pyserial==3.4
+pigpio==1.38
+resin-sdk==1.6.2
+luma.oled==2.3.0
+python-dateutil==2.6.1
+picamera==1.13
+numpy==1.13.3

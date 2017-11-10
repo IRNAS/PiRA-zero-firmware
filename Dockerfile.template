@@ -1,37 +1,33 @@
 FROM resin/%%RESIN_MACHINE_NAME%%-python:latest
 
-#switch on systemd init system in container
+# Switch on systemd init system in container.
 ENV INITSYSTEM on
 
-# Set the working directory
+# Set the working directory.
 WORKDIR /usr/src/app
 
-# pip install python deps from requirements.txt
-# For caching until requirements.txt changes
-COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt && \
-   apt-get update && apt-get install -yq \
-   i2c-tools python-smbus pigpio libfreetype6-dev libjpeg-dev build-essential &&\
-   apt-get clean && rm -rf /var/lib/apt/lists/*
-
-RUN pip install git+https://github.com/resin-io/resin-sdk-python.git
-RUN pip install --upgrade luma.oled
-
-WORKDIR  /usr/src/app
-
-
-# Use apt-get to install dependencies
-RUN apt-get update && apt-get install -yq --no-install-recommends \
-    dnsmasq && \
+# Install system package dependencies.
+RUN apt-get update && \
+    apt-get install -yq \
+        i2c-tools python-smbus pigpio libfreetype6-dev libjpeg-dev build-essential \
+        dnsmasq && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install resin-wifi-connect
+# Install resin-wifi-connect.
 RUN curl https://api.github.com/repos/resin-io/resin-wifi-connect/releases/latest -s \
     | grep -hoP 'browser_download_url": "\K.*%%RESIN_ARCH%%\.tar\.gz' \
     | xargs -n1 curl -Ls \
     | tar -xvz -C /usr/src/app/
 
-# Copy everything into the container
+# This environmental variable is required to build latest picamera.
+ENV READTHEDOCS True
+
+# Install python package dependencies.
+COPY ./requirements.txt /requirements.txt
+RUN pip install -r /requirements.txt
+
+# Copy everything into the container.
 COPY . ./
 
+# Setup entry point.
 CMD ["bash", "start.sh"]

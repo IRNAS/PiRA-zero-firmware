@@ -52,6 +52,7 @@ The following environment variables can be used to configure the firmware:
   * `SLEEP_WHEN_CHARGING` (default `0`) when set to `1` the unit will sleep while it is charging.
   * `SLEEP_NEVER` (default `0`) when set to `1` the unit will never go to sleep.
   * `WIFI_WHEN_NOT_CHARGING` (default `1`) when set to `0` wifi will be disable while not charging.
+  * `MODULES` a comma separated list of modules to load.
 * Scheduler
   * `SCHEDULE_START` (default `08:00`)
   * `SCHEDULE_END` (default `18:00`)
@@ -63,3 +64,4 @@ The following environment variables can be used to configure the firmware:
   * `CAMERA_MIN_LIGHT_LEVEL` (default `0.0`)
 * Rockblock
   * `ROCKBLOCK_REPORT_INTERVAL` (default `24`)
+  * `ROCKBLOCK_RETRIES` (default `2`)

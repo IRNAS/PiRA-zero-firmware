@@ -146,6 +146,12 @@ class Boot(object):
     def process(self):
         self.log.insert(LOG_SYSTEM, 'module_init')
 
+        # Override module list if configured.
+        override_modules = os.environ.get('MODULES', None)
+        if override_modules:
+            print("Only loading configured modules.")
+            self.enabled_modules = override_modules.strip().split(',')
+
         # Initialize modules.
         print("Initializing modules...")
         self.modules = collections.OrderedDict()

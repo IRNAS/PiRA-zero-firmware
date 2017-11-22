@@ -36,81 +36,86 @@ class Module(object):
             print("Already transmitted measurements today, not powering up Rockblock.")
             return
 
-        # Power up modem.
-        with self.power_on_modem():
-            # Initialize modem driver.
-            modem = None
-            try:
-                modem = rockblock.rockBlock(devices.ROCKBLOCK_UART, rockblock.rockBlockProtocol())
-            except rockblock.rockBlockException:
-                print("ERROR: Failed to initialize Rockblock modem.")
-                return
+        # Power up modem. We leave it powered on until a message is successfully delivered or
+        # we go back to sleep (whichever comes first).
+        self.power_on_modem()
 
-            serial_id = modem.getSerialIdentifier()
-            signal = modem.requestSignalStrength()
-            net_time = modem.networkTime()
-            print("Rockblock serial id:", serial_id)
-            print("Rockblock signal strength:", signal)
-            print("Rockblock network time:", net_time)
+        # Initialize modem driver.
+        modem = None
+        try:
+            modem = rockblock.rockBlock(devices.ROCKBLOCK_UART, rockblock.rockBlockProtocol())
+        except rockblock.rockBlockException:
+            print("ERROR: Failed to initialize Rockblock modem.")
+            return
 
-            if not signal:
-                print("ERROR: No signal, not transmitting message.")
-                return
+        serial_id = modem.getSerialIdentifier()
+        signal = modem.requestSignalStrength()
+        net_time = modem.networkTime()
+        print("Rockblock serial id:", serial_id)
+        print("Rockblock signal strength:", signal)
+        print("Rockblock network time:", net_time)
 
-            # Transmit message.
-            measurements = [
-                LOG_DEVICE_TEMPERATURE,
-                LOG_DEVICE_VOLTAGE,
-            ]
+        if not signal:
+            print("ERROR: No signal, not transmitting message.")
+            return
 
-            if 'pira.modules.ultrasonic' in modules:
-                from .ultrasonic import LOG_ULTRASONIC_DISTANCE
-                measurements.append(LOG_ULTRASONIC_DISTANCE)
+        # Transmit message.
+        measurements = [
+            LOG_DEVICE_TEMPERATURE,
+            LOG_DEVICE_VOLTAGE,
+        ]
 
-            # Message format (network byte order):
-            # - 4 bytes: unsigned integer, number of measurements
-            # - 4 bytes: float, average
-            # - 4 bytes: float, min
-            # - 4 bytes: float, max
-            message = io.BytesIO()
-            for event_type in measurements:
-                values = self._boot.log.query(powered_on_time, event_type, only_numeric=True)
+        if 'pira.modules.ultrasonic' in modules:
+            from .ultrasonic import LOG_ULTRASONIC_DISTANCE
+            measurements.append(LOG_ULTRASONIC_DISTANCE)
 
-                # Compute statistics.
-                if values:
-                    count = len(values)
-                    average = sum(values) / count
-                    min_value = min(values)
-                    max_value = max(values)
-                else:
-                    count = 0
-                    average = 0.0
-                    min_value = 0.0
-                    max_value = 0.0
+        # Message format (network byte order):
+        # - 4 bytes: unsigned integer, number of measurements
+        # - 4 bytes: float, average
+        # - 4 bytes: float, min
+        # - 4 bytes: float, max
+        message = io.BytesIO()
+        for event_type in measurements:
+            values = self._boot.log.query(powered_on_time, event_type, only_numeric=True)
 
-                message.write(struct.pack('!Lfff', count, average, min_value, max_value))
+            # Compute statistics.
+            if values:
+                count = len(values)
+                average = sum(values) / count
+                min_value = min(values)
+                max_value = max(values)
+            else:
+                count = 0
+                average = 0.0
+                min_value = 0.0
+                max_value = 0.0
 
-            message = message.getvalue()
-            print("Transmitting message ({} bytes) via Rockblock...".format(len(message)))
+            message.write(struct.pack('!Lfff', count, average, min_value, max_value))
 
-            if not modem.sendMessage(message):
-                print("ERROR: Failed to send message.")
-                return
+        message = message.getvalue()
+        print("Transmitting message ({} bytes) via Rockblock...".format(len(message)))
 
-            # Update state.
-            self._boot.state[STATE_POWERED_ON_TIME] = current_time
+        if not modem.sendMessage(message):
+            print("ERROR: Failed to send message.")
+            return
 
-    @contextlib.contextmanager
+        # Power off modem.
+        self.power_off_modem()
+
+        # Update state.
+        self._boot.state[STATE_POWERED_ON_TIME] = current_time
+
     def power_on_modem(self):
         """Power on modem."""
+        print("Powering on Rockblock modem.")
         self._boot.pigpio.write(devices.GPIO_ROCKBLOCK_POWER_PIN, gpio.HIGH)
         time.sleep(5)
 
-        try:
-            yield
-        finally:
-            # Power off modem.
-            self._boot.pigpio.write(devices.GPIO_ROCKBLOCK_POWER_PIN, gpio.LOW)
+    def power_off_modem(self):
+        """Power off modem."""
+        print("Powering off Rockblock modem.")
+        self._boot.pigpio.write(devices.GPIO_ROCKBLOCK_POWER_PIN, gpio.LOW)
 
     def shutdown(self, modules):
-        pass
+        # Power off modem.
+        self.power_off_modem()

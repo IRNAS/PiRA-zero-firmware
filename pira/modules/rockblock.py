@@ -15,6 +15,7 @@ from ..const import LOG_DEVICE_VOLTAGE, LOG_DEVICE_TEMPERATURE
 
 # Persistent state.
 STATE_POWERED_ON_TIME = 'rockblock.powered_on_time'
+STATE_RETRIES = 'rockblock.retries'
 
 
 class Module(object):
@@ -27,6 +28,14 @@ class Module(object):
         except ValueError:
             print("ERROR: Malformed Rockblock reporting interval.")
             self._interval = 24
+
+        # Maximum number of retries.
+        try:
+            self._max_retries = int(os.environ.get('ROCKBLOCK_RETRIES', '2'))
+        except ValueError:
+            self._max_retries = 2
+
+        self._power = False
 
     def process(self, modules):
         # Check if we have powered on the modem today.
@@ -99,23 +108,40 @@ class Module(object):
             print("ERROR: Failed to send message.")
             return
 
-        # Power off modem.
+        # Power off modem and reset interval.
         self.power_off_modem()
-
-        # Update state.
-        self._boot.state[STATE_POWERED_ON_TIME] = current_time
+        self.reset_interval()
 
     def power_on_modem(self):
         """Power on modem."""
+        if self._power:
+            return
+
         print("Powering on Rockblock modem.")
         self._boot.pigpio.write(devices.GPIO_ROCKBLOCK_POWER_PIN, gpio.HIGH)
+        self._power = True
         time.sleep(5)
 
     def power_off_modem(self):
         """Power off modem."""
         print("Powering off Rockblock modem.")
         self._boot.pigpio.write(devices.GPIO_ROCKBLOCK_POWER_PIN, gpio.LOW)
+        self._power = False
+
+    def reset_interval(self):
+        """Mark transmission as done in the current interval."""
+        self._boot.state[STATE_POWERED_ON_TIME] = datetime.datetime.now()
+        self._boot.state[STATE_RETRIES] = 0
 
     def shutdown(self, modules):
-        # Power off modem.
-        self.power_off_modem()
+        # If we are out of retries, reset retry counter and powered on time.
+        retries = self._boot.state[STATE_RETRIES] or 0
+        if self._power:
+            # Modem is still powered, this means that we failed to send a message.
+            self.power_off_modem()
+
+            retries += 1
+            self._boot.state[STATE_RETRIES] = retries
+            if retries >= self._max_retries:
+                print("Maximum number of Rockblock retries reached.")
+                self.reset_interval()

@@ -64,10 +64,6 @@ class Module(object):
         print("Rockblock signal strength:", signal)
         print("Rockblock network time:", net_time)
 
-        if not signal:
-            print("ERROR: No signal, not transmitting message.")
-            return
-
         # Transmit message.
         measurements = [
             LOG_DEVICE_TEMPERATURE,

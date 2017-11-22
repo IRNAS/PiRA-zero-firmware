@@ -32,11 +32,9 @@ class Module(object):
         # Check if we have powered on the modem today.
         current_time = datetime.datetime.now()
         powered_on_time = self._boot.state[STATE_POWERED_ON_TIME]
-        if powered_on_time is not None:
-            powered_on_time = dateutil.parser.parse(powered_on_time)
-            if current_time - powered_on_time < datetime.timedelta(hours=self._interval):
-                print("Already transmitted measurements today, not powering up Rockblock.")
-                return
+        if powered_on_time is not None and current_time - powered_on_time < datetime.timedelta(hours=self._interval):
+            print("Already transmitted measurements today, not powering up Rockblock.")
+            return
 
         # Power up modem.
         with self.power_on_modem():

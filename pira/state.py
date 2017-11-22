@@ -1,7 +1,7 @@
-import json
+import pickle
 
 # State file location.
-STATE_FILE = '/data/pira-zero-state.json'
+STATE_FILE = '/data/pira-zero-state.pkl'
 
 
 class State(object):
@@ -15,7 +15,7 @@ class State(object):
         try:
             with open(STATE_FILE, 'r') as state_file:
                 try:
-                    self._state = json.load(state_file)
+                    self._state = pickle.load(state_file)
                 except ValueError:
                     # Corrupted state.
                     self._state = {}
@@ -25,7 +25,7 @@ class State(object):
     def save(self):
         """Save state."""
         with open(STATE_FILE, 'w+') as state_file:
-            json.dump(self._state, state_file)
+            pickle.dump(self._state, state_file)
 
     def __getitem__(self, name):
         try:

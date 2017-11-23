@@ -60,8 +60,8 @@ The following environment variables can be used to configure the firmware:
   * `SCHEDULE_T_OFF` (default `35`)
 * Camera
   * `CAMERA_RESOLUTION` (default `1280x720`)
-  * `CAMERA_VIDEO_DURATION` (default `until-sleep`)
-  * `CAMERA_MIN_LIGHT_LEVEL` (default `0.0`)
+  * `CAMERA_VIDEO_DURATION` (default `until-sleep`, duration in minutes or `off`)
+  * `CAMERA_MIN_LIGHT_LEVEL` (default `0.0`, minimum required for video to start recording)
 * Rockblock
   * `ROCKBLOCK_REPORT_INTERVAL` (default `24`)
   * `ROCKBLOCK_RETRIES` (default `2`)

@@ -280,7 +280,7 @@ class Boot(object):
         # Go to sleep if charging is not connected.
         print('Shutting down as scheduled.')
         self.pigpio.write(devices.GPIO_SELF_ENABLE_PIN, gpio.LOW)
-        self._resin.models.supervisor.restart(
+        self._resin.models.supervisor.reboot(
             device_uuid=os.environ['RESIN_DEVICE_UUID'],
             app_id=os.environ['RESIN_APP_ID']
         )

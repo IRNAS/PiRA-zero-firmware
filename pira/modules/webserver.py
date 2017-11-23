@@ -13,8 +13,8 @@ class Module(object):
     def __init__(self, boot):
         self._boot = boot
 
-        if boot.is_charging:
-            print("Starting web server on port {} since we are charging.".format(WEBSERVER_PORT))
+        if boot.is_wifi_enabled:
+            print("Starting web server on port {}.".format(WEBSERVER_PORT))
             thread = threading.Thread(target=self._server)
             thread.daemon = True
             thread.start()

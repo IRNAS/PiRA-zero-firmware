@@ -67,9 +67,8 @@ class Boot(object):
 
     def setup_wifi(self):
         """Setup wifi."""
-        enable_when_not_charging = os.environ.get('WIFI_WHEN_NOT_CHARGING', '1') == '1'
-        if not self.is_charging and not enable_when_not_charging:
-            print("Not starting wifi as we are not charging.")
+        if not self.is_wifi_enabled:
+            print("Not starting wifi as it is disabled.")
             return
 
         # Enable wifi.
@@ -215,6 +214,11 @@ class Boot(object):
     @property
     def is_charging(self):
         return self.sensor_bq.get_status(bq2429x.CHRG_STAT) != "Not charging"
+
+    @property
+    def is_wifi_enabled(self):
+        enable_when_not_charging = os.environ.get('WIFI_WHEN_NOT_CHARGING', '1') == '1'
+        return self.is_charging or enable_when_not_charging
 
     def shutdown(self):
         """Request shutdown."""

@@ -46,7 +46,14 @@ class Boot(object):
     def setup_gpio(self):
         """Initialize GPIO."""
         print("Initializing GPIO...")
-        self.pigpio = pigpio.pi()
+        while True:
+            try:
+                self.pigpio = pigpio.pi()
+                self.pigpio.get_pigpio_version()
+                break
+            except:
+                print("Failed to initialize connection to pigpiod. Retrying...")
+                time.sleep(1)
 
         self.pigpio.set_mode(devices.GPIO_TIMER_STATUS_PIN, pigpio.INPUT)
         self.pigpio.set_mode(devices.GPIO_RTC_STATUS_PIN, pigpio.INPUT)

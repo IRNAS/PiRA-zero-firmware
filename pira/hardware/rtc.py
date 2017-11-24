@@ -55,10 +55,16 @@ class RTC(object):
         self._i2c = smbus.SMBus(bus)
 
     def _read(self, register):
-        return self._i2c.read_byte_data(RTC.I2C_ADDRESS, register)
+        try:
+            return self._i2c.read_byte_data(RTC.I2C_ADDRESS, register)
+        except IOError:
+            return 0
 
     def _write(self, register, data):
-        self._i2c.write_byte_data(RTC.I2C_ADDRESS, register, data)
+        try:
+            self._i2c.write_byte_data(RTC.I2C_ADDRESS, register, data)
+        except IOError:
+            pass
 
     def _decode_time(self, offset, has_seconds=True, has_month_year=True):
         length = 7
@@ -95,6 +101,8 @@ class RTC(object):
         # Values can be incorrect when certain alarm registers are not initialized.
         if not date:
             date = 1
+        if not month:
+            month = 1
         if second > 59:
             second = 0
         if minute > 59:

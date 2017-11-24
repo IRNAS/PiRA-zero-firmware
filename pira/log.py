@@ -1,5 +1,6 @@
 import datetime
-import json
+import os
+import hashlib
 
 import sqlite3
 
@@ -24,12 +25,25 @@ class Log(object):
     """Persistent log store."""
 
     def __init__(self):
-        self._db = sqlite3.connect(LOG_FILE)
+        while True:
+            try:
+                self._db = sqlite3.connect(LOG_FILE)
 
-        # Create database schema.
-        with self._db:
-            self._db.execute(LOG_TABLE_SCHEMA)
-            self._db.execute(LOG_TABLE_INDEX)
+                # Create database schema.
+                with self._db:
+                    self._db.execute(LOG_TABLE_SCHEMA)
+                    self._db.execute(LOG_TABLE_INDEX)
+
+                break
+            except sqlite3.DatabaseError:
+                # Database may be malformed, rename and re-create.
+                try:
+                    os.rename(
+                        LOG_FILE,
+                        '{}.corrupted.{}'.format(LOG_FILE, hashlib.md5(os.urandom(4)).hexdigest())
+                    )
+                except OSError:
+                    raise
 
     def _convert_timestamp(self, timestamp):
         if not timestamp:
@@ -76,3 +90,7 @@ class Log(object):
                 'INSERT INTO log (timestamp, key, value) VALUES(?, ?, ?)',
                 (self._convert_timestamp(timestamp), key, str(value))
             )
+
+    def close(self):
+        """Close log."""
+        self._db.close()

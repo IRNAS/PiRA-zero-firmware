@@ -267,6 +267,7 @@ class Boot(object):
             traceback.print_exc()
 
         self.log.insert(LOG_SYSTEM, 'halt')
+        self.log.close()
 
         # Force filesystem sync.
         try:

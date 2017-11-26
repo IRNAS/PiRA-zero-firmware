@@ -65,3 +65,7 @@ The following environment variables can be used to configure the firmware:
 * Rockblock
   * `ROCKBLOCK_REPORT_INTERVAL` (default `24`)
   * `ROCKBLOCK_RETRIES` (default `2`)
+* LoRa
+  * `LORA_DEVICE_ADDR`
+  * `LORA_NWS_KEY`
+  * `LORA_APPS_KEY`

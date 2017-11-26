@@ -14,8 +14,6 @@ class LoRa(lora.LoRa):
         self.set_mode(lora.MODE.STDBY)
         self.clear_irq_flags(TxDone=1)
 
-        print("LoRa TX done.")
-
 
 class Module(object):
     def __init__(self, boot):
@@ -45,7 +43,7 @@ class Module(object):
         if not self._lora:
             lora.board.setup()
 
-            self._lora = LoRa()
+            self._lora = LoRa(verbose=False)
             self._lora.set_mode(lora.MODE.SLEEP)
             self._lora.set_dio_mapping([1, 0, 0, 0, 0, 0])
             self._lora.set_freq(868.1)

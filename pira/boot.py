@@ -33,6 +33,7 @@ class Boot(object):
         'pira.modules.camera',
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
+        'pira.modules.lora',
         'pira.modules.rockblock',
         'pira.modules.debug',
         'pira.modules.webserver',

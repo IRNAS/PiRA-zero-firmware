@@ -8,6 +8,9 @@ import struct
 from ..hardware import devices, lora
 from ..const import LOG_DEVICE_VOLTAGE, LOG_DEVICE_TEMPERATURE
 
+# Persistent state.
+STATE_FRAME_COUNTER = 'lora.frame_counter'
+
 
 class LoRa(lora.LoRa):
     def on_tx_done(self):
@@ -20,6 +23,7 @@ class Module(object):
         self._boot = boot
         self._lora = None
         self._last_update = datetime.datetime.now()
+        self._frame_counter = boot.state[STATE_FRAME_COUNTER] or 1
 
         # Parse configuration.
         try:
@@ -96,7 +100,7 @@ class Module(object):
             lora.MHDR.UNCONF_DATA_UP,
             {
                 'devaddr': self._device_addr,
-                'fcnt': 1,
+                'fcnt': self._frame_counter,
                 'data': list([ord(x) for x in message]),
             }
         )
@@ -104,6 +108,8 @@ class Module(object):
         self._lora.write_payload(payload.to_raw())
         self._lora.set_mode(lora.MODE.TX)
         self._last_update = datetime.datetime.now()
+        self._frame_counter += 1
+        self._boot.state[STATE_FRAME_COUNTER] = self._frame_counter
 
     def shutdown(self, modules):
         pass

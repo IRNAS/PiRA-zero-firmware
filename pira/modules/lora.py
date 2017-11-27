@@ -27,16 +27,20 @@ class Module(object):
 
         # Parse configuration.
         try:
-            self._device_addr = self._decode_hex('LORA_DEVICE_ADDR')
-            self._nws_key = self._decode_hex('LORA_NWS_KEY')
-            self._apps_key = self._decode_hex('LORA_APPS_KEY')
+            self._device_addr = self._decode_hex('LORA_DEVICE_ADDR', length=4)
+            self._nws_key = self._decode_hex('LORA_NWS_KEY', length=16)
+            self._apps_key = self._decode_hex('LORA_APPS_KEY', length=16)
             self._enabled = True
         except:
             self._enabled = False
 
-    def _decode_hex(self, name):
+    def _decode_hex(self, name, length):
         """Decode hex-encoded environment variable."""
-        return [ord(x) for x in os.environ.get(name, '').decode('hex')]
+        value = [ord(x) for x in os.environ.get(name, '').decode('hex')]
+        if len(value) != length:
+            raise ValueError
+
+        return value
 
     def process(self, modules):
         if not self._enabled:
@@ -100,7 +104,7 @@ class Module(object):
             lora.MHDR.UNCONF_DATA_UP,
             {
                 'devaddr': self._device_addr,
-                'fcnt': self._frame_counter,
+                'fcnt': self._frame_counter % 2**16,
                 'data': list([ord(x) for x in message]),
             }
         )
@@ -109,7 +113,7 @@ class Module(object):
         self._lora.set_mode(lora.MODE.TX)
         self._last_update = datetime.datetime.now()
         self._frame_counter += 1
-        self._boot.state[STATE_FRAME_COUNTER] = self._frame_counter
+        self._boot.state[STATE_FRAME_COUNTER] = self._frame_counter % 2**16
 
     def shutdown(self, modules):
         pass

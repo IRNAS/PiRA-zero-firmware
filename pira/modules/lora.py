@@ -14,6 +14,10 @@ STATE_FRAME_COUNTER = 'lora.frame_counter'
 
 
 class LoRa(lora.LoRa):
+    # We need to override the default dio_mapping here as calling set_dio_mapping below
+    # causes a race condition if the GPIO watchdog fires before set_dio_mapping is called.
+    dio_mapping = [1, 0, 0, 0, 0, 0]
+
     def on_tx_done(self):
         self.set_mode(lora.MODE.STDBY)
         self.clear_irq_flags(TxDone=1)

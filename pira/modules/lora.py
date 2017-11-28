@@ -30,6 +30,7 @@ class Module(object):
             self._device_addr = self._decode_hex('LORA_DEVICE_ADDR', length=4)
             self._nws_key = self._decode_hex('LORA_NWS_KEY', length=16)
             self._apps_key = self._decode_hex('LORA_APPS_KEY', length=16)
+            self._spread_factor = int(os.environ.get('LORA_SPREAD_FACTOR', '7'))
             self._enabled = True
         except:
             self._enabled = False
@@ -56,7 +57,7 @@ class Module(object):
             self._lora.set_dio_mapping([1, 0, 0, 0, 0, 0])
             self._lora.set_freq(868.1)
             self._lora.set_pa_config(pa_select=1)
-            self._lora.set_spreading_factor(7)
+            self._lora.set_spreading_factor(self._spread_factor)
             self._lora.set_pa_config(max_power=0x0F, output_power=0x0E)
             self._lora.set_sync_word(0x34)
             self._lora.set_rx_crc(True)

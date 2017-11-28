@@ -69,3 +69,4 @@ The following environment variables can be used to configure the firmware:
   * `LORA_DEVICE_ADDR`
   * `LORA_NWS_KEY`
   * `LORA_APPS_KEY`
+  * `LORA_SPREAD_FACTOR` (default `7`)

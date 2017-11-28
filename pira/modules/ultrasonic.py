@@ -1,9 +1,13 @@
 from __future__ import print_function
 
+from ..messages import MeasurementConfig
 from ..hardware import devices, ultrasonic
 
 # Log events.
 LOG_ULTRASONIC_DISTANCE = 'ultrasonic.distance'
+
+# Measurement configuration.
+MEASUREMENT_ULTRASONIC_DISTANCE = MeasurementConfig(LOG_ULTRASONIC_DISTANCE, int)
 
 
 class Module(object):

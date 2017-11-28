@@ -11,7 +11,8 @@ import dateutil.parser
 import RPi.GPIO as gpio
 
 from ..hardware import devices, rockblock
-from ..const import LOG_DEVICE_VOLTAGE, LOG_DEVICE_TEMPERATURE
+from ..const import MEASUREMENT_DEVICE_VOLTAGE, MEASUREMENT_DEVICE_TEMPERATURE
+from ..messages import create_measurements_message
 
 # Persistent state.
 STATE_POWERED_ON_TIME = 'rockblock.powered_on_time'
@@ -66,38 +67,15 @@ class Module(object):
 
         # Transmit message.
         measurements = [
-            LOG_DEVICE_TEMPERATURE,
-            LOG_DEVICE_VOLTAGE,
+            MEASUREMENT_DEVICE_TEMPERATURE,
+            MEASUREMENT_DEVICE_VOLTAGE,
         ]
 
         if 'pira.modules.ultrasonic' in modules:
-            from .ultrasonic import LOG_ULTRASONIC_DISTANCE
-            measurements.append(LOG_ULTRASONIC_DISTANCE)
+            from .ultrasonic import MEASUREMENT_ULTRASONIC_DISTANCE
+            measurements.append(MEASUREMENT_ULTRASONIC_DISTANCE)
 
-        # Message format (network byte order):
-        # - 4 bytes: unsigned integer, number of measurements
-        # - 4 bytes: float, average
-        # - 4 bytes: float, min
-        # - 4 bytes: float, max
-        message = io.BytesIO()
-        for event_type in measurements:
-            values = self._boot.log.query(powered_on_time, event_type, only_numeric=True)
-
-            # Compute statistics.
-            if values:
-                count = len(values)
-                average = sum(values) / count
-                min_value = min(values)
-                max_value = max(values)
-            else:
-                count = 0
-                average = 0.0
-                min_value = 0.0
-                max_value = 0.0
-
-            message.write(struct.pack('!Lfff', count, average, min_value, max_value))
-
-        message = message.getvalue()
+        message = create_measurements_message(self._boot, powered_on_time, measurements)
         print("Transmitting message ({} bytes) via Rockblock...".format(len(message)))
 
         if not modem.sendMessage(message):

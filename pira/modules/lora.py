@@ -4,6 +4,7 @@ import datetime
 import io
 import os
 import struct
+import time
 
 from ..hardware import devices, lora
 from ..const import MEASUREMENT_DEVICE_VOLTAGE, MEASUREMENT_DEVICE_TEMPERATURE
@@ -16,11 +17,7 @@ STATE_FRAME_COUNTER = 'lora.frame_counter'
 class LoRa(lora.LoRa):
     # We need to override the default dio_mapping here as calling set_dio_mapping below
     # causes a race condition if the GPIO watchdog fires before set_dio_mapping is called.
-    dio_mapping = [1, 0, 0, 0, 0, 0]
-
-    def on_tx_done(self):
-        self.set_mode(lora.MODE.STDBY)
-        self.clear_irq_flags(TxDone=1)
+    dio_mapping = [0, 0, 0, 0, 0, 0]
 
 
 class Module(object):
@@ -55,11 +52,9 @@ class Module(object):
 
         # Initialize LoRa driver if needed.
         if not self._lora:
-            lora.board.setup()
-
             self._lora = LoRa(verbose=False)
             self._lora.set_mode(lora.MODE.SLEEP)
-            self._lora.set_dio_mapping([1, 0, 0, 0, 0, 0])
+            self._lora.set_dio_mapping([0, 0, 0, 0, 0, 0])
             self._lora.set_freq(868.1)
             self._lora.set_pa_config(pa_select=1)
             self._lora.set_spreading_factor(self._spread_factor)
@@ -95,6 +90,20 @@ class Module(object):
 
         self._lora.write_payload(payload.to_raw())
         self._lora.set_mode(lora.MODE.TX)
+
+        # Wait for transmission to finish.
+        tx_wait_start = datetime.datetime.now()
+        while (datetime.datetime.now() - tx_wait_start) < datetime.timedelta(seconds=30):
+            if self._lora.get_irq_flags()['tx_done']:
+                break
+
+            time.sleep(0.1)
+        else:
+            print("WARNING: Timeout while transmitting LoRa message.")
+
+        self._lora.set_mode(lora.MODE.STDBY)
+        self._lora.clear_irq_flags(TxDone=1)
+
         self._last_update = datetime.datetime.now()
         self._frame_counter += 1
         self._boot.state[STATE_FRAME_COUNTER] = self._frame_counter % 2**16

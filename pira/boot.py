@@ -43,6 +43,7 @@ class Boot(object):
         self.reason = Boot.BOOT_REASON_UNKNOWN
         self._resin = resin.Resin()
         self._shutdown = False
+        self._charging_status = collections.deque(maxlen=4)
 
     def setup_gpio(self):
         """Initialize GPIO."""
@@ -98,6 +99,8 @@ class Boot(object):
         self.log = Log()
         self.log.insert(LOG_SYSTEM, 'boot')
 
+        self._update_charging()
+
         # Determine boot reason.
         timer_en_state = self.pigpio.read(devices.GPIO_TIMER_STATUS_PIN)
         rtc_en_state = self.pigpio.read(devices.GPIO_RTC_STATUS_PIN)
@@ -107,7 +110,7 @@ class Boot(object):
             # TODO: Figure out method for detection of the two later.
             self.reason = Boot.BOOT_REASON_TIMER
         elif timer_en_state == gpio.HIGH and rtc_en_state == gpio.LOW:
-            if self.sensor_bq.get_status(bq2429x.CHRG_STAT) == "Not charging":
+            if not self.is_charging:
                 # Boot due to RTC.
                 self.reason = Boot.BOOT_REASON_RTC
             else:
@@ -183,6 +186,8 @@ class Boot(object):
         # Enter main loop.
         print("Starting processing loop.")
         while True:
+            self._update_charging()
+
             # Process all modules.
             for name, module in self.modules.items():
                 try:
@@ -211,6 +216,15 @@ class Boot(object):
 
             time.sleep(30)
 
+    def _update_charging(self):
+        """Update charging status."""
+        not_charging = (
+            self.sensor_bq.get_status(bq2429x.VBUS_STAT) == 'No input' and
+            self.sensor_bq.get_status(bq2429x.CHRG_STAT) == 'Not charging' and
+            self.sensor_bq.get_status(bq2429x.PG_STAT) == 'Not good power'
+        )
+        self._charging_status.append(not not_charging)
+
     @property
     def should_sleep_when_charging(self):
         return os.environ.get('SLEEP_WHEN_CHARGING', '0') == '1'
@@ -221,7 +235,7 @@ class Boot(object):
 
     @property
     def is_charging(self):
-        return self.sensor_bq.get_status(bq2429x.CHRG_STAT) != "Not charging"
+        return any(self._charging_status)
 
     @property
     def is_wifi_enabled(self):

@@ -13,6 +13,7 @@ class Module(object):
         print('BQ2429x  : status - CHRG_STAT : ' + str(self._boot.sensor_bq.get_status(bq2429x.CHRG_STAT)))
         print('BQ2429x  : status - PG_STAT ---- : ' + str(self._boot.sensor_bq.get_status(bq2429x.PG_STAT)))
         print('MCP3021  : status - voltage --: ' + str(self._boot.sensor_mcp.get_voltage()) + 'V')
+        print('Charging : {}'.format(self._boot.is_charging))
         print('RTC      : {}'.format(self._boot.rtc.current_time))
         print('Temp.    : {}'.format(self._boot.rtc.temperature))
         print('RTC Stat.: {}'.format(bin(self._boot.rtc.status)[2:]))

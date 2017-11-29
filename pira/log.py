@@ -60,7 +60,7 @@ class Log(object):
         :param only_numeric: Skip non-numeric values
         """
         result = self._db.execute(
-            'SELECT timestamp, value FROM log WHERE timestamp > ? AND key = ?',
+            'SELECT timestamp, value FROM log WHERE timestamp >= ? AND key = ?',
             (self._convert_timestamp(start_ts), key)
         )
 

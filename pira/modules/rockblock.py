@@ -76,6 +76,9 @@ class Module(object):
             measurements.append(MEASUREMENT_ULTRASONIC_DISTANCE)
 
         message = create_measurements_message(self._boot, powered_on_time, measurements)
+        if not message:
+            return
+
         print("Transmitting message ({} bytes) via Rockblock...".format(len(message)))
 
         if not modem.sendMessage(message):

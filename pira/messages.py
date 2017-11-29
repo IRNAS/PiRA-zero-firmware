@@ -15,11 +15,15 @@ def create_measurements_message(boot, timestamp, measurements):
     - 2 bytes: unsigned integer, min
     - 2 bytes: unsigned integer, max
 
+    In case there is no measurements to report in the given time
+    interval, None is returned.
+
     :param boot: Boot instance
     :param timestamp: Measuerements start timestamp
     :param measurements: List of measurement types to include, where each
         element is a MeasurementConfig instance
     """
+    have_measurements = False
     message = io.BytesIO()
     for config in measurements:
         values = boot.log.query(timestamp, config.log_type, only_numeric=True)
@@ -31,6 +35,7 @@ def create_measurements_message(boot, timestamp, measurements):
             average = converter(sum(values) / count)
             min_value = converter(min(values))
             max_value = converter(max(values))
+            have_measurements = True
         else:
             count = 0
             average = 0
@@ -38,6 +43,9 @@ def create_measurements_message(boot, timestamp, measurements):
             max_value = 0
 
         message.write(struct.pack('!HHHH', count, average, min_value, max_value))
+
+    if not have_measurements:
+        return
 
     message = message.getvalue()
     return message

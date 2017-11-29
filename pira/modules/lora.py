@@ -78,6 +78,9 @@ class Module(object):
             measurements.append(MEASUREMENT_ULTRASONIC_DISTANCE)
 
         message = create_measurements_message(self._boot, self._last_update, measurements)
+        if not message:
+            return
+
         print("Transmitting message ({} bytes) via LoRa...".format(len(message)))
 
         payload = lora.LoRaWANPayload(self._nws_key, self._apps_key)

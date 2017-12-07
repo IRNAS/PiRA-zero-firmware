@@ -26,6 +26,7 @@ class Module(object):
         except ValueError:
             self.video_duration_min = None
 
+        self.light_level = 0.0
         try:
             self.minimum_light_level = float(os.environ.get('CAMERA_MIN_LIGHT_LEVEL', 0.0))
         except ValueError:
@@ -72,13 +73,14 @@ class Module(object):
         self._camera.capture(
             os.path.join(
                 CAMERA_STORAGE_PATH,
-                'snapshot-{year}-{month:02d}-{day:02d}-{hour:02d}-{minute:02d}-{second:02d}.jpg'.format(
+                'snapshot-{year}-{month:02d}-{day:02d}-{hour:02d}-{minute:02d}-{second:02d}-{light:.2f}.jpg'.format(
                     year=now.year,
                     month=now.month,
                     day=now.day,
                     hour=now.hour,
                     minute=now.minute,
                     second=now.second,
+                    light=self.light_level,
                 )
             ),
             format='jpeg'
@@ -126,6 +128,8 @@ class Module(object):
         light_level = np.average(light_level)
 
         print("Detected light level:", light_level)
+
+        self.light_level = light_level
 
         return light_level > self.minimum_light_level
 

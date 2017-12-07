@@ -110,14 +110,24 @@ class RTC(object):
         if hour > 23:
             hour = 0
 
-        return datetime.datetime(
-            year=RTC.YEAR_BASE + year,
-            month=month,
-            day=date,
-            second=second,
-            minute=minute,
-            hour=hour,
-        )
+        try:
+            return datetime.datetime(
+                year=RTC.YEAR_BASE + year,
+                month=month,
+                day=date,
+                second=second,
+                minute=minute,
+                hour=hour,
+            )
+        except ValueError:
+            return datetime.datetime(
+                year=RTC.YEAR_BASE,
+                month=1,
+                day=1,
+                second=0,
+                minute=0,
+                hour=0,
+            )
 
     def _set_alarm(self, register, value, has_seconds=True):
         values = []

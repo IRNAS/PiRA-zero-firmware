@@ -8,6 +8,8 @@ import numpy as np
 import picamera
 import picamera.array
 
+import resin
+
 
 # Image storage location.
 CAMERA_STORAGE_PATH = '/data/camera'
@@ -143,3 +145,7 @@ class Module(object):
 
             self._camera.close()
             self._camera = None
+
+    @property
+    def should_sleep_when_charging(self):
+        return os.environ.get('SLEEP_WHEN_CHARGING', '0') == '1'

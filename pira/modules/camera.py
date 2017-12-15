@@ -42,7 +42,7 @@ class Module(object):
         now = datetime.datetime.now()
 
         # Do not record when charging.
-        if self._boot.is_charging:
+        if self._boot.is_charging and not self.should_sleep_when_charging:
             print("We are charging, not recording.")
             return
 

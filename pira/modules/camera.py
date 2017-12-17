@@ -70,23 +70,23 @@ class Module(object):
             print("Not enough light, requesting shutdown.")
             self._boot.shutdown()
             return
-
-        # Store single snapshot.
-        self._camera.capture(
-            os.path.join(
-                CAMERA_STORAGE_PATH,
-                'snapshot-{year}-{month:02d}-{day:02d}-{hour:02d}-{minute:02d}-{second:02d}-{light:.2f}.jpg'.format(
-                    year=now.year,
-                    month=now.month,
-                    day=now.day,
-                    hour=now.hour,
-                    minute=now.minute,
-                    second=now.second,
-                    light=self.light_level,
-                )
-            ),
-            format='jpeg'
-        )
+        else:
+            # Store single snapshot only if above threshold
+            self._camera.capture(
+                os.path.join(
+                    CAMERA_STORAGE_PATH,
+                    'snapshot-{year}-{month:02d}-{day:02d}-{hour:02d}-{minute:02d}-{second:02d}-{light:.2f}.jpg'.format(
+                        year=now.year,
+                        month=now.month,
+                        day=now.day,
+                        hour=now.hour,
+                        minute=now.minute,
+                        second=now.second,
+                        light=self.light_level,
+                    )
+                ),
+                format='jpeg'
+            )
 
         # Check if there is enough free space left.
         info = os.statvfs(CAMERA_STORAGE_PATH)

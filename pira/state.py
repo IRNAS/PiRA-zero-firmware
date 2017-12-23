@@ -16,7 +16,7 @@ class State(object):
             with open(STATE_FILE, 'r') as state_file:
                 try:
                     self._state = pickle.load(state_file)
-                except (ValueError, EOFError):
+                except (ValueError, EOFError, IndexError):
                     # Corrupted state.
                     self._state = {}
         except IOError:

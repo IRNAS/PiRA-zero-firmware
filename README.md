@@ -53,6 +53,7 @@ The following environment variables can be used to configure the firmware:
   * `SLEEP_NEVER` (default `0`) when set to `1` the unit will never go to sleep.
   * `WIFI_WHEN_NOT_CHARGING` (default `1`) when set to `0` wifi will be disable while not charging.
   * `MODULES` a comma separated list of modules to load.
+  * `SHUTDOWN_STRATEGY` (default `reboot`) to configure if the unit will self-disable through GPIO and do a reboot (prevents hanging in shutdown if externally enabled by hardware) or `shutdown` strategy that will do a proper shutdown that is corruption safe, but may result in hanging in shutdown state.
 * Scheduler
   * `SCHEDULE_START` (default `08:00`)
   * `SCHEDULE_END` (default `18:00`)

@@ -293,13 +293,25 @@ class Boot(object):
 
         self.clear_alarms()
 
-        # Go to sleep if charging is not connected.
-        print('Shutting down as scheduled.')
-        self.pigpio.write(devices.GPIO_SELF_ENABLE_PIN, gpio.LOW)
-        self._resin.models.supervisor.reboot(
-            device_uuid=os.environ['RESIN_DEVICE_UUID'],
-            app_id=os.environ['RESIN_APP_ID']
-        )
+        self.shutdown_strategy = os.environ.get('SHUTDOWN_STRATEGY', 'reboot')
+
+        # Configurable shutdown strategy, shutdown as an option, reboot as default
+
+        if self.shutdown_strategy == 'shutdown':
+            # Shutdown will clear the self-enable pin by default
+            self._resin.models.supervisor.shutdown(
+                device_uuid=os.environ['RESIN_DEVICE_UUID'],
+                app_id=os.environ['RESIN_APP_ID']
+            )
+        else:
+            # Turn off the self-enable pin then reboot as safety if enabled by another source
+            print('Shutting down as scheduled.')
+            self.pigpio.write(devices.GPIO_SELF_ENABLE_PIN, gpio.LOW)
+
+            self._resin.models.supervisor.reboot(
+                device_uuid=os.environ['RESIN_DEVICE_UUID'],
+                app_id=os.environ['RESIN_APP_ID']
+            )
 
         # Block.
         while True:

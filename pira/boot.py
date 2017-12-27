@@ -206,6 +206,11 @@ class Boot(object):
             self.log.insert(LOG_DEVICE_VOLTAGE, self.sensor_mcp.get_voltage())
             self.log.insert(LOG_DEVICE_TEMPERATURE, self.rtc.temperature)
 
+            # Check if battery voltage is below threshold and shutdown
+            if (dself.sensor_mcp.get_voltage() <= os.environ.get('SHUTDOWN_VOLTAGE', 2.6):
+                print("Voltage is under the threshold, need to shutdown.")
+                self._boot.shutdown()
+
             # Save state.
             try:
                 self.state.save()
@@ -255,12 +260,14 @@ class Boot(object):
 
     def _perform_shutdown(self):
         """Perform shutdown."""
-        if self.is_charging and not self.should_sleep_when_charging:
-            print("Not shutting down as we are charging and are configured to not sleep when charging.")
-            return
 
+        # If configured to never sleep, then do not go to sleep in any case
         if self.should_never_sleep:
             print("Not shutting down as we should never sleep.")
+            return
+
+        if self.is_charging and not self.should_sleep_when_charging:
+            print("Not shutting down as we are charging and are configured to not sleep when charging.")
             return
 
         self.log.insert(LOG_SYSTEM, 'shutdown')

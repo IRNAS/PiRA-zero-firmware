@@ -44,6 +44,13 @@ On boot:
  1. Send data to TheThingsNetwork
  1. Send data over RockBlock Iridium modem
 
+## Fleet configuration variables
+The following fleet configuration variables must be defined for correct operation:
+ * `RESIN_HOST_CONFIG_dtoverlay` to value `pi3-miniuart-bt`
+ * `RESIN_HOST_CONFIG_gpu_mem` to value `128`, required by camera
+ * `RESIN_HOST_CONFIG_start_x` to value `1`, required by camera
+ * `RESIN_SUPERVISOR_DELTA` to value `1`, so updates are faster, optional.
+
 ## Supported environment variables
 
 The following environment variables can be used to configure the firmware:
@@ -54,6 +61,7 @@ The following environment variables can be used to configure the firmware:
   * `WIFI_WHEN_NOT_CHARGING` (default `1`) when set to `0` wifi will be disable while not charging.
   * `MODULES` a comma separated list of modules to load.
   * `SHUTDOWN_STRATEGY` (default `reboot`) to configure if the unit will self-disable through GPIO and do a reboot (prevents hanging in shutdown if externally enabled by hardware) or `shutdown` strategy that will do a proper shutdown that is corruption safe, but may result in hanging in shutdown state.
+  * `SHUTDOWN_VOLTAGE` (default `2.6`V) to configure when the system should shutdown. At 2.6V hardware shutdown will occur, suggested value is 2.3-3V. When this is triggered, the device will wake up next based on the configured interval, unless the battery voltage continues to fall under the hardware limit, then it will boot again when it charges. Note this shutdown will be aborted if `SLEEP_WHEN_CHARGING==0` or `SLEEP_NEVER==1`
 * Scheduler
   * `SCHEDULE_START` (default `08:00`)
   * `SCHEDULE_END` (default `18:00`)

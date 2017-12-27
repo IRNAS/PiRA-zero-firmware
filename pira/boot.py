@@ -209,7 +209,7 @@ class Boot(object):
             # Check if battery voltage is below threshold and shutdown
             if (self.sensor_mcp.get_voltage() <= os.environ.get('SHUTDOWN_VOLTAGE', '2.6')):
                 print("Voltage is under the threshold, need to shutdown.")
-                self._boot.shutdown()
+                self._shutdown = True
 
             # Save state.
             try:

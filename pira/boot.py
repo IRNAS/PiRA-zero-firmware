@@ -207,7 +207,7 @@ class Boot(object):
             self.log.insert(LOG_DEVICE_TEMPERATURE, self.rtc.temperature)
 
             # Check if battery voltage is below threshold and shutdown
-            if (dself.sensor_mcp.get_voltage() <= os.environ.get('SHUTDOWN_VOLTAGE', '2.6'):
+            if (dself.sensor_mcp.get_voltage() <= os.environ.get('SHUTDOWN_VOLTAGE', '2.6')):
                 print("Voltage is under the threshold, need to shutdown.")
                 self._boot.shutdown()
 

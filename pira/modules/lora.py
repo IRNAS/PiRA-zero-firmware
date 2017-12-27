@@ -53,7 +53,10 @@ class Module(object):
         # Initialize LoRa driver if needed.
         if not self._lora:
             self._lora = LoRa(verbose=False)
+            print("WARNING: Lora mode check")
+            print(self._lora.get_mode(self))
             self._lora.set_mode(lora.MODE.SLEEP)
+            print(self._lora.get_mode(self))
             self._lora.set_dio_mapping([0, 0, 0, 0, 0, 0])
             self._lora.set_freq(868.1)
             self._lora.set_pa_config(pa_select=1)

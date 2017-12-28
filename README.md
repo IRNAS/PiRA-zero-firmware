@@ -80,4 +80,4 @@ The following environment variables can be used to configure the firmware:
   * `LORA_APPS_KEY`
   * `LORA_SPREAD_FACTOR` (default `7`)
  * Sensors
-  * `MCP3021_RATIO` (default `0.025`) is the conversion value between raw reading and voltage, measure and calibrate for more precise readings
+  * `MCP3021_RATIO` (default `0.0217`) is the conversion value between raw reading and voltage, measure and calibrate for more precise readings

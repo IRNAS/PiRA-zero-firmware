@@ -131,7 +131,8 @@ class Boot(object):
 
         # Disable charge timer, configure pre-charge.
         self.sensor_bq.set_charge_termination(10010010)
-        self.sensor_bq.set_ter_prech_current(1111, 0111)
+        #this appears to be broken
+        #self.sensor_bq.set_ter_prech_current(1111, 0111)
 
         # Monitor timer pin and clear alarms while we are running.
         self.pigpio.callback(

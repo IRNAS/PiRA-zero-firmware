@@ -5,6 +5,7 @@ import io
 import os
 import struct
 import time
+import pigpio
 
 from ..hardware import devices, lora
 from ..const import MEASUREMENT_DEVICE_VOLTAGE, MEASUREMENT_DEVICE_TEMPERATURE
@@ -53,12 +54,12 @@ class Module(object):
         # Initialize LoRa driver if needed.
         if not self._lora:
             #first reset
-            self._boot.pigpio.set_mode(devices.GPIO_LORA_RESET_PIN, pigpio.OUTPUT)
-            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
+            boot.pigpio.set_mode(devices.GPIO_LORA_RESET_PIN, pigpio.OUTPUT)
+            boot.pigpio,write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
             time.sleep(0.01)
-            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.LOW)
+            boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.LOW)
             time.sleep(0.001)
-            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
+            boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
             time.sleep(0.006)
 
             self._lora = LoRa(verbose=False)

@@ -48,6 +48,10 @@ class Module(object):
         return value
 
     def process(self, modules):
+        if not self._enabled:
+            print("WARNING: LoRa is not correctly configured, skipping.")
+            return
+
         # Initialize LoRa driver if needed.
         if not self._lora:
             try:
@@ -70,11 +74,8 @@ class Module(object):
                 self._lora.set_sync_word(0x34)
                 self._lora.set_rx_crc(True)
             except AssertionError:
-                self._enabled = False
-
-            # Check if configured and initialized
-            if not self._enabled:
-                print("WARNING: LoRa is not correctly configured or initialized, skipping.")
+                self._lora = None
+                print("WARNING: LoRa is not correctly initialized, skipping.")
                 return
 
         # Transmit message.

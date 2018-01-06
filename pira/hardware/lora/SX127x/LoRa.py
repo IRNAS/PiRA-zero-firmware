@@ -101,6 +101,8 @@ class LoRa(object):
         else if returned_mode != MODE.SLEEP:
             print('LoRa: Entered incorrect mode: {%5.4x}'.format(returned_mode)
             return
+        else:
+            pass
         self.backup_registers = self.get_all_registers()
         # more setup work:
         if do_calibration:

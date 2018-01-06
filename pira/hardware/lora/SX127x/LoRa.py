@@ -94,7 +94,13 @@ class LoRa(object):
         BOARD.add_events(self._dio0, self._dio1, self._dio2, self._dio3, self._dio4, self._dio5)
         # set mode to sleep and read all registers
         self.set_mode(MODE.SLEEP)
-        print('Lora mode register value {}'.format(self.get_mode()))
+        returned_mode = self.get_mode()
+        if returned_mode == 0 :
+            print('LoRa: Failed to configure mode, check HW: {%5.4x}'.format(returned_mode)
+            return
+        else if returned_mode != MODE.SLEEP:
+            print('LoRa: Entered incorrect mode: {%5.4x}'.format(returned_mode)
+            return
         self.backup_registers = self.get_all_registers()
         # more setup work:
         if do_calibration:

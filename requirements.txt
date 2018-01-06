@@ -8,3 +8,6 @@ python-dateutil==2.6.1
 picamera==1.13
 numpy==1.13.3
 pycrypto==2.6.1
+requests==2.9.1
+paramiko==2.4.0
+PyYAML==3.12

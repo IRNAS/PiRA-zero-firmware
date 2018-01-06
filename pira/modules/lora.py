@@ -6,6 +6,7 @@ import os
 import struct
 import time
 import pigpio
+import RPi.GPIO as gpio
 
 from ..hardware import devices, lora
 from ..const import MEASUREMENT_DEVICE_VOLTAGE, MEASUREMENT_DEVICE_TEMPERATURE

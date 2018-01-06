@@ -96,10 +96,10 @@ class LoRa(object):
         self.set_mode(MODE.SLEEP)
         returned_mode = self.get_mode()
         if returned_mode is 0 :
-            print('LoRa: Failed to configure mode, check HW: {%5.4x}'.format(returned_mode)
+            print('LoRa: Failed to configure mode, check HW: {%5.4x}'.format(returned_mode))
             return
-        else if returned_mode is not MODE.SLEEP :
-            print('LoRa: Entered incorrect mode: {%5.4x}'.format(returned_mode)
+        elif returned_mode is not MODE.SLEEP :
+            print('LoRa: Entered incorrect mode: {%5.4x}'.format(returned_mode))
             return
         else:
             pass

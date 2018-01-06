@@ -61,12 +61,12 @@ class Module(object):
         """
         body = json.dumps(body)
 
-        uuid = os.environ.get('NODEWATCHER_UUID', None),
-        host = os.environ.get('NODEWATCHER_HOST', None),
-        key = os.environ.get('NODEWATCHER_KEY', None),
+        uuid = os.environ.get('NODEWATCHER_UUID', None)
+        host = os.environ.get('NODEWATCHER_HOST', None)
+        key = os.environ.get('NODEWATCHER_KEY', None)
 
         # Check if nodewatcher push is correctly configured
-        if uuid == None or host == None or key == None:
+        if uuid is None or host is None or key is None:
             print("Nodewatcher push not configured")
             return
 

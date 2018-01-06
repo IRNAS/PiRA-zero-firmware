@@ -12,6 +12,7 @@ import yaml
 
 from ..const import MEASUREMENT_DEVICE_VOLTAGE, MEASUREMENT_DEVICE_TEMPERATURE
 from ..messages import create_measurements_message
+from ..hardware import bq2429x
 
 
 class Module(object):
@@ -20,28 +21,18 @@ class Module(object):
 
     def process(self, modules):
 
-        # Transmit message.
-        measurements = [
-            MEASUREMENT_DEVICE_TEMPERATURE,
-            MEASUREMENT_DEVICE_VOLTAGE,
-        ]
-
-        if 'pira.modules.ultrasonic' in modules:
-            from .ultrasonic import MEASUREMENT_ULTRASONIC_DISTANCE
-            measurements.append(MEASUREMENT_ULTRASONIC_DISTANCE)
-
         body = {
             'sensors.generic': {
                 'device_temperature': {
                     'name': 'Temperature',
                     'unit': 'C',
-                    'value': measurements.MEASUREMENT_DEVICE_TEMPERATURE,
+                    'value': self._boot.rtc.temperature,
                     'group': 'temperature',
                 },
                 'device_voltage': {
                     'name': 'Voltage',
                     'unit': 'V',
-                    'value': measurements.MEASUREMENT_DEVICE_VOLTAGE,
+                    'value': self._boot.sensor_mcp.get_voltage(),
                     'group': 'voltage',
                 },
             }
@@ -59,17 +50,6 @@ class Module(object):
 
     def shutdown(self, modules):
         print("Shutting down nodewatcher module.")
-
-    def nodewatcher_uri_for_node(uuid):
-        """Generate nodewatcher push URI for a specific node.
-
-        :param uuid: node uuid
-        """
-        return 'http://{host}/push/http/{uuid}'.format(
-            host=get_config('nodewatcher.host'),
-            uuid=uuid,
-        )
-
 
     def nodewatcher_push(body, ignore_errors=True):
         """Push data to nodewatcher server.

@@ -98,6 +98,11 @@ class Boot(object):
         """Perform boot sequence."""
         print("Performing boot sequence.")
 
+        if os.environ.get('BOOT_DISABLE', '0') == '1':
+            print("Boot has been disabled (BOOT_DISABLE=1). Not booting further.")
+            while True:
+                time.sleep(1)
+
         self.setup_gpio()
         self.setup_devices()
         self.setup_wifi()

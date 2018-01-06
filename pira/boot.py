@@ -68,12 +68,6 @@ class Boot(object):
 
         self.pigpio.set_mode(devices.GPIO_TIMER_DONE_PIN, pigpio.OUTPUT)
 
-        self.pigpio.set_mode(devices.GPIO_LORA_RESET_PIN, pigpio.OUTPUT)
-        self.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.LOW)
-        time.sleep(0.001)
-        self.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
-        time.sleep(0.005)
-
     def setup_devices(self):
         """Initialize device drivers."""
         print("Initializing device drivers...")

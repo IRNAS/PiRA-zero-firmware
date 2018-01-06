@@ -26,13 +26,13 @@ class Module(object):
                 'device_temperature': {
                     'name': 'Temperature',
                     'unit': 'C',
-                    'value': self._boot.rtc.temperature,
+                    'value': str(self._boot.rtc.temperature),
                     'group': 'temperature',
                 },
                 'device_voltage': {
                     'name': 'Voltage',
                     'unit': 'V',
-                    'value': self._boot.sensor_mcp.get_voltage(),
+                    'value': str(self._boot.sensor_mcp.get_voltage()),
                     'group': 'voltage',
                 },
             }

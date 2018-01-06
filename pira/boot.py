@@ -190,7 +190,10 @@ class Boot(object):
             try:
                 module = importlib.import_module(module_name)
             except ImportError:
-                print("  * {} [IMPORT FAILED]".format(module_name))
+                print("ImportError  * {} [IMPORT FAILED]".format(module_name))
+                continue
+            except ValueError:
+                print("ValueError  * {} [IMPORT FAILED]".format(module_name))
                 continue
 
             print("  * {}".format(module.__name__))

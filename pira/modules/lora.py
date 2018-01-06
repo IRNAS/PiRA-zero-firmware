@@ -53,12 +53,12 @@ class Module(object):
         # Initialize LoRa driver if needed.
         if not self._lora:
             #first reset
-            boot.pigpio.set_mode(devices.GPIO_LORA_RESET_PIN, pigpio.OUTPUT)
-            boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
+            self._boot.pigpio.set_mode(devices.GPIO_LORA_RESET_PIN, pigpio.OUTPUT)
+            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
             time.sleep(0.01)
-            boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.LOW)
+            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.LOW)
             time.sleep(0.001)
-            boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
+            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
             time.sleep(0.006)
 
             self._lora = LoRa(verbose=False)

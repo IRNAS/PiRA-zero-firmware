@@ -95,10 +95,10 @@ class LoRa(object):
         # set mode to sleep and read all registers
         self.set_mode(MODE.SLEEP)
         returned_mode = self.get_mode()
-        if returned_mode == 0 :
+        if returned_mode is 0 :
             print('LoRa: Failed to configure mode, check HW: {%5.4x}'.format(returned_mode)
             return
-        else if returned_mode != MODE.SLEEP:
+        else if returned_mode is not MODE.SLEEP :
             print('LoRa: Entered incorrect mode: {%5.4x}'.format(returned_mode)
             return
         else:

@@ -73,6 +73,7 @@ class Module(object):
                 self._lora.set_pa_config(max_power=0x0F, output_power=0x0E)
                 self._lora.set_sync_word(0x34)
                 self._lora.set_rx_crc(True)
+                
             except AssertionError:
                 self._lora = None
                 print("WARNING: LoRa is not correctly initialized, skipping.")

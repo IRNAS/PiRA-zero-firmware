@@ -23,18 +23,19 @@ class Module(object):
 
         body = {
             'sensors.generic': {
+                '_meta': {'version': 1},
                 'device_temperature': {
                     'name': 'Temperature',
                     'unit': 'C',
                     'value': str(self._boot.rtc.temperature),
-                    'group': 'temperature',
+                    'group': 'temperature'
                 },
                 'device_voltage': {
                     'name': 'Voltage',
                     'unit': 'V',
                     'value': str(self._boot.sensor_mcp.get_voltage()),
-                    'group': 'voltage',
-                },
+                    'group': 'voltage'
+                }
             }
         }
 

@@ -35,6 +35,7 @@ class Boot(object):
         # the latest values.
         'pira.modules.lora',
         'pira.modules.rockblock',
+        'pira.modules.nodewatcher',
         'pira.modules.debug',
         'pira.modules.webserver',
     ]
@@ -129,10 +130,23 @@ class Boot(object):
         # Clear timer and RTC alarms.
         self.clear_alarms()
 
-        # Disable charge timer, configure pre-charge.
-        self.sensor_bq.set_charge_termination(10010010)
-        #this appears to be broken
-        #self.sensor_bq.set_ter_prech_current(1111, 0111)
+        # Disable charge timer, configure pre-charge. THIS IS IMPORTANT
+        # Bit 7 EN_TERM 1 Enabled
+        # Bit 6 Reserved 0
+        #I2C Watchdog Timer Setting - MUST be disabled with 00, otherwise resets
+        #Bit 5 WATCHDOG[1] 0
+        #Bit 4 WATCHDOG[0] 0
+        #Charging Safety Timer Enable - MUST be disabled if device is on permanently
+        #Bit 3 EN_TIMER 0
+        #Bit 2 CHG_TIMER[1] R/W 1
+        #Bit 1 CHG_TIMER[0] R/W 0
+        #Bit 0 Reserved R/W 0
+
+        self.sensor_bq.set_charge_termination(10000010)
+
+        # Precharge must be higher then self-consumption, in multi-cell can be 2A
+        # Termination must be lower then self-consumption
+        self.sensor_bq.set_ter_prech_current(1111, 0001)
 
         # Monitor timer pin and clear alarms while we are running.
         self.pigpio.callback(

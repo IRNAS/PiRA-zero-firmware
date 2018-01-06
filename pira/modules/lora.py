@@ -56,6 +56,7 @@ class Module(object):
         if not self._lora:
             try:
                 #first reset
+                print("LoRa hardware reset.")
                 self._boot.pigpio.set_mode(devices.GPIO_LORA_RESET_PIN, pigpio.OUTPUT)
                 self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
                 time.sleep(0.01)
@@ -73,7 +74,7 @@ class Module(object):
                 self._lora.set_pa_config(max_power=0x0F, output_power=0x0E)
                 self._lora.set_sync_word(0x34)
                 self._lora.set_rx_crc(True)
-                
+
             except AssertionError:
                 self._lora = None
                 print("WARNING: LoRa is not correctly initialized, skipping.")

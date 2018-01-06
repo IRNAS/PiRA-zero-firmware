@@ -97,11 +97,11 @@ class LoRa(object):
         returned_mode = self.get_mode()
         if returned_mode is 0 :
             print('LoRa: Failed to configure mode, check HW: 0x%.2x'%(returned_mode))
-            return
+            assert False
         elif returned_mode & 0b00000110 is not 0 :
             #checking two sleep bytes only
             print('LoRa: Entered incorrect mode: 0x%.2x'%(returned_mode))
-            return
+            assert False
         else:
             pass
         self.backup_registers = self.get_all_registers()

@@ -48,30 +48,34 @@ class Module(object):
         return value
 
     def process(self, modules):
-        if not self._enabled:
-            print("WARNING: LoRa is not correctly configured, skipping.")
-            return
-
         # Initialize LoRa driver if needed.
         if not self._lora:
-            #first reset
-            self._boot.pigpio.set_mode(devices.GPIO_LORA_RESET_PIN, pigpio.OUTPUT)
-            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
-            time.sleep(0.01)
-            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.LOW)
-            time.sleep(0.001)
-            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
-            time.sleep(0.006)
+            try:
+                #first reset
+                self._boot.pigpio.set_mode(devices.GPIO_LORA_RESET_PIN, pigpio.OUTPUT)
+                self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
+                time.sleep(0.01)
+                self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.LOW)
+                time.sleep(0.001)
+                self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
+                time.sleep(0.006)
 
-            self._lora = LoRa(verbose=False)
-            self._lora.set_mode(lora.MODE.SLEEP)
-            self._lora.set_dio_mapping([0, 0, 0, 0, 0, 0])
-            self._lora.set_freq(868.1)
-            self._lora.set_pa_config(pa_select=1)
-            self._lora.set_spreading_factor(self._spread_factor)
-            self._lora.set_pa_config(max_power=0x0F, output_power=0x0E)
-            self._lora.set_sync_word(0x34)
-            self._lora.set_rx_crc(True)
+                self._lora = LoRa(verbose=False)
+                self._lora.set_mode(lora.MODE.SLEEP)
+                self._lora.set_dio_mapping([0, 0, 0, 0, 0, 0])
+                self._lora.set_freq(868.1)
+                self._lora.set_pa_config(pa_select=1)
+                self._lora.set_spreading_factor(self._spread_factor)
+                self._lora.set_pa_config(max_power=0x0F, output_power=0x0E)
+                self._lora.set_sync_word(0x34)
+                self._lora.set_rx_crc(True)
+            except AssertionError:
+                self._enabled = False
+
+            # Check if configured and initialized
+            if not self._enabled:
+                print("WARNING: LoRa is not correctly configured or initialized, skipping.")
+                return
 
         # Transmit message.
         measurements = [

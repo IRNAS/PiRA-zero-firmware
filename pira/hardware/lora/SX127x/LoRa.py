@@ -21,6 +21,7 @@
 
 
 import sys
+import time
 from .constants import *
 from .board_config import BOARD
 
@@ -95,6 +96,17 @@ class LoRa(object):
         # set mode to sleep and read all registers
         self.set_mode(MODE.SLEEP)
         returned_mode = self.get_mode()
+
+        #retry 10 times
+        for x in range(0, 10):
+            self.set_mode(MODE.SLEEP)
+            returned_mode = self.get_mode()
+            if returned_mode & 0b00000110 is not 0:
+                print('LoRa: Entered incorrect mode: 0x%.2x'%(returned_mode))
+                time.sleep(0.05)
+            else:
+                break;
+
         if returned_mode is 0 :
             print('LoRa: Failed to configure mode, check HW: 0x%.2x'%(returned_mode))
             assert False

@@ -73,7 +73,7 @@ class Module(object):
                     'X-Nodewatcher-Signature': signature,
                 }
             )
-            print("Nodewatcher data pushed successfully")
+            print("Nodewatcher data pushed successfully: {} {} {}".format(nodewatcher_uri,body,signature))
         except:
             print("WARNING: Nodewatcher data push failed")
 

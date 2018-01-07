@@ -46,19 +46,6 @@ class Module(object):
             if value['value'] is None:
                 del body['sensors.generic'][sensor_id]
 
-        self.nodewatcher_push(body)
-
-
-    def shutdown(self, modules):
-        print("Shutting down nodewatcher module.")
-
-    def nodewatcher_push(body, ignore_errors=True):
-        """Push data to nodewatcher server.
-
-        :param uuid: node uuid
-        :param body: correctly formatted request body
-        :param ignore_errors: whether errors should be silently ignored
-        """
         body = json.dumps(body)
 
         uuid = os.environ.get('NODEWATCHER_UUID', None)
@@ -75,7 +62,6 @@ class Module(object):
             uuid=uuid,
         )
 
-
         signature = base64.b64encode(hmac.new(key, body, hashlib.sha256).digest())
 
         try:
@@ -87,6 +73,10 @@ class Module(object):
                     'X-Nodewatcher-Signature': signature,
                 }
             )
+            print("Nodewatcher data pushed successfully")
         except:
             if not ignore_errors:
-                raise
+            raise
+
+    def shutdown(self, modules):
+        print("Shutting down nodewatcher module.")

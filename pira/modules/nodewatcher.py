@@ -75,8 +75,7 @@ class Module(object):
             )
             print("Nodewatcher data pushed successfully")
         except:
-            if not ignore_errors:
-            raise
+            print("WARNING: Nodewatcher data push failed")
 
     def shutdown(self, modules):
         print("Shutting down nodewatcher module.")

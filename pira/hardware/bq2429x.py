@@ -89,7 +89,7 @@ chrg_fault_data = {
 }
 boost_data = {
     '0' : "Normal",
-    '1' : "VBUS overloaded or VBUS OVP in boost mode" 
+    '1' : "VBUS overloaded or VBUS OVP in boost mode"
 }
 watchdog_data = {
     '0' : "Normal",
@@ -121,25 +121,25 @@ class BQ2429x(object):
 
             # it is choosing on the type_of_status and returning the dictionary value
             if type_of_status == VSYS_STAT:
-                return vsys_data[binary_value[0]]
+                return vsys_data[binary_value[7]]
 
             elif type_of_status == THERM_STAT:
-                return therm_data[binary_value[1]]
+                return therm_data[binary_value[6]]
 
             elif type_of_status == PG_STAT:
-                return pg_data[binary_value[2]]
+                return pg_data[binary_value[5]]
 
             elif type_of_status == DPM_STAT:
-                return dpm_data[binary_value[3]]
+                return dpm_data[binary_value[4]]
 
             elif type_of_status == CHRG_STAT:
                 # combining the two to make life easier
-                _stat = str(binary_value[5]) + str(binary_value[4])
+                _stat = str(binary_value[2]) + str(binary_value[3])
                 return chrg_data[_stat]
 
             elif type_of_status == VBUS_STAT:
                 # combining the two to make life easier
-                _stat = str(binary_value[7]) + str(binary_value[6])
+                _stat = str(binary_value[0]) + str(binary_value[1])
                 return vbus_data[_stat]
 
 
@@ -159,21 +159,21 @@ class BQ2429x(object):
 
             # choose on the type_of_fault and return the data from the dictionary
             if type_of_fault == NTC_FAULT:
-                _stat = str(binary_value[2]) + str(binary_value[1]) + str(binary_value[0])
+                _stat = str(binary_value[5]) + str(binary_value[6]) + str(binary_value[7])
                 return ntc_data[_stat]
 
             elif type_of_fault == BAT_FAULT:
-                return bat_data[binary_value[3]]
+                return bat_data[binary_value[4]]
 
             elif type_of_fault == CHRG_FAULT:
-                _stat = str(binary_value[5]) + str(binary_value[4])
+                _stat = str(binary_value[2]) + str(binary_value[3])
                 return chrg_fault_data[_stat]
 
             elif type_of_fault == BOOST_FAULT:
-                return boost_data[binary_value[6]]
+                return boost_data[binary_value[1]]
 
             elif type_of_fault == WATCHDOG_FAULT:
-                return watchdog_data[binary_value[7]]
+                return watchdog_data[binary_value[0]]
 
         except:
             print "Couldn't connect to BQ2429x"

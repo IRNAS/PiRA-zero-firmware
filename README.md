@@ -79,5 +79,21 @@ The following environment variables can be used to configure the firmware:
   * `LORA_NWS_KEY`
   * `LORA_APPS_KEY`
   * `LORA_SPREAD_FACTOR` (default `7`)
- * Sensors
+* Nodewatcher (to report measurements to Nodewatcher platform)
+  * `NODEWATCHER_UUID`
+  * `NODEWATCHER_HOST`
+  * `NODEWATCHER_KEY`
+* Sensors
   * `MCP3021_RATIO` (default `0.0217`) is the conversion value between raw reading and voltage, measure and calibrate for more precise readings
+
+ ### Using without Resin.io
+ To use on a standard Raspbian Lite image complete the following steps:
+  * Install Raspbian Lite
+  * Install all required packages with `apt-get` and 'pip', see `Dockerfile.template` and `requirements.txt` for what is needed, possibly some other packages are required as well
+  * Create the /data folder by running `sudo mkdir /data/`
+  * Configure environmental variables by adding them to the end of `/etc/environment` file, for example `SLEEP_WHEN_CHARGING="1"`
+  * Run the start script by (-E is required to read environment variables correctly):
+  ```
+  cd PiRA-zero-firmware
+  sudo -E ./start.sh
+  ```

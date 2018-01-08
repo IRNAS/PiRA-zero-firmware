@@ -22,6 +22,7 @@ class Module(object):
         self._recording_start = None
 
         self.resolution = os.environ.get('CAMERA_RESOLUTION', '1280x720')
+        self.camera_shutdown = os.environ.get('CAMERA_SHUTDOWN', '0')
         self.video_duration = os.environ.get('CAMERA_VIDEO_DURATION', 'until-sleep')
         try:
             self.video_duration_min = datetime.timedelta(minutes=int(self.video_duration))
@@ -40,36 +41,45 @@ class Module(object):
         except OSError:
             pass
 
-    def process(self, modules):
+        # Do initial operations, capture a snapshot and start video recording
         now = datetime.datetime.now()
 
-        # Do not record when charging.
+        # Check how much space is left
+        info = os.statvfs(CAMERA_STORAGE_PATH)
+        free_space = (info.f_frsize * info.f_bavail / (1024.0 * 1024.0 * 1024.0))
+        print("Storage free space:", free_space, "GiB")
+
+        # Do not record or take snapshots when charging if so configured
         if self._boot.is_charging and not self.should_sleep_when_charging:
             print("We are charging, not recording.")
             return
 
-        if self._camera:
-            # Check if we need to stop recording.
-            if self.video_duration_min is not None and now - self._recording_start >= self.video_duration_min:
-                try:
-                    self._camera.stop_recording()
-                except:
-                    pass
-
-            return
-
+        # Create the camera object
         try:
             self._camera = picamera.PiCamera()
             self._camera.resolution = self.resolution
         except picamera.PiCameraError:
             print("ERROR: Failed to initialize camera.")
+            # ask the system to shut-down
+            if self.camera_fail_shutdown:
+                self._boot.shutdown()
+                print("Requesting shutdown because of camera initialization fail.")
             return
 
-        # Check for minimum light requirements if configured. If there is no light, shut down.
+        # Check for the amount of light
         if not self._check_light_conditions():
-            print("Not enough light, requesting shutdown.")
-            self._boot.shutdown()
+            print("Not enough light to record video.")
+            # turn off video recording
+            self.video_duration='off'
+            # ask the system to shut-down
+            if self.camera_fail_shutdown:
+                self._boot.shutdown()
+                print("Requesting shutdown because of low-light conditions.")
             return
+
+        # Check for free space
+        if free_space < 1:
+            print("Not enough free space (less than 1 GiB), do not save snapshots")
         else:
             # Store single snapshot only if above threshold
             self._camera.capture(
@@ -88,17 +98,15 @@ class Module(object):
                 format='jpeg'
             )
 
-        # Check if there is enough free space left.
-        info = os.statvfs(CAMERA_STORAGE_PATH)
-        free_space = (info.f_frsize * info.f_bavail / (1024.0 * 1024.0 * 1024.0))
-        print("Storage free space:", free_space, "GiB")
-        if free_space < 1:
-            print("Not enough free space (less than 1 GiB), skipping video recording")
-            return
-
         # Record a video of configured duration or until sleep.
         if self.video_duration == 'off':
             print("Not recording video as it is disabled.")
+            return
+
+        # Check if there is enough space to start recording
+        print("Storage free space:", free_space, "GiB")
+        if free_space < 2:
+            print("Not enough free space (less than 2 GiB), skipping video recording")
             return
 
         print("Starting video recording (duration {}).".format(self.video_duration))
@@ -117,6 +125,32 @@ class Module(object):
             format='h264'
         )
         self._recording_start = now
+
+    def process(self, modules):
+        # This runs if camera is initialized
+        if self._camera:
+            now = datetime.datetime.now()
+
+            stop_recording=False
+
+            # Stop recording if we happen to start charging
+            if self._boot.is_charging and not self.should_sleep_when_charging:
+                print("We are charging, stop recording.")
+                stop_recording=True
+            if free_space < 2:
+                print("Not enough free space (less than 2 GiB), stop video recording")
+                stop_recording=True
+            # Check if duration of video is achieved.
+            if self.video_duration_min is not None and now - self._recording_start >= self.video_duration_min:
+                stop_recording=True
+            # Stop recording
+            if stop_recording:
+                try:
+                    self._camera.stop_recording()
+                    print("Video recording has stopped after: ",now - self._recording_start)
+                except:
+                    pass
+        return
 
     def _check_light_conditions(self):
         """Check current light conditions."""
@@ -149,3 +183,7 @@ class Module(object):
     @property
     def should_sleep_when_charging(self):
         return os.environ.get('SLEEP_WHEN_CHARGING', '0') == '1'
+
+    @property
+    def camera_fail_shutdown(self):
+        return os.environ.get('CAMERA_FAIL_SHUTDOWN', '0') == '1'

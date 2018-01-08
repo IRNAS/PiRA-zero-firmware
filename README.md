@@ -68,7 +68,7 @@ The following environment variables can be used to configure the firmware:
   * `SCHEDULE_T_ON` (default `15`)
   * `SCHEDULE_T_OFF` (default `35`)
 * Camera
-  * `CAMERA_RESOLUTION` (default `1280x720`, options are `1280x720`, `1920x1080`, `2592x1944` and some others. Mind fi copying resolution that you use the letter `x` not a multiply character.)
+  * `CAMERA_RESOLUTION` (default `1280x720`, options are `1280x720`, `1920x1080`, `2592x1952` and some others. Mind fi copying resolution that you use the letter `x` not a multiply character.)
   * `CAMERA_VIDEO_DURATION` (default `until-sleep`, duration in minutes or `off`)
   * `CAMERA_MIN_LIGHT_LEVEL` (default `0.0`, minimum required for video to start recording)
   * `CAMERA_FAIL_SHUTDOWN` (default `0`), can camera shutdown the device for example if not enough light, set to `1` to enable

@@ -131,6 +131,8 @@ class Module(object):
         if self._camera:
             now = datetime.datetime.now()
 
+            info = os.statvfs(CAMERA_STORAGE_PATH)
+            free_space = (info.f_frsize * info.f_bavail / (1024.0 * 1024.0 * 1024.0))
             stop_recording=False
 
             # Stop recording if we happen to start charging

@@ -70,6 +70,7 @@ class Module(object):
         if not self._check_light_conditions():
             print("Not enough light to record video.")
             # turn off video recording
+            self._camera = None
             self.video_duration='off'
             # ask the system to shut-down
             if self.camera_fail_shutdown:
@@ -101,12 +102,14 @@ class Module(object):
         # Record a video of configured duration or until sleep.
         if self.video_duration == 'off':
             print("Not recording video as it is disabled.")
+            self._camera = None
             return
 
         # Check if there is enough space to start recording
         print("Storage free space:", free_space, "GiB")
         if free_space < 2:
             print("Not enough free space (less than 2 GiB), skipping video recording")
+            self._camera = None
             return
 
         print("Starting video recording (duration {}).".format(self.video_duration))

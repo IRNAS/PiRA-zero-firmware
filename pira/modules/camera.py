@@ -20,14 +20,22 @@ class Module(object):
         self._boot = boot
         self._camera = None
         self._recording_start = None
+        self._last_snapshot = None
 
         self.resolution = os.environ.get('CAMERA_RESOLUTION', '1280x720')
         self.camera_shutdown = os.environ.get('CAMERA_SHUTDOWN', '0')
         self.video_duration = os.environ.get('CAMERA_VIDEO_DURATION', 'until-sleep')
+        self.snapshot_interval_conf = os.environ.get('SNAPSHOT_INTERVAL', 'off')
+
         try:
             self.video_duration_min = datetime.timedelta(minutes=int(self.video_duration))
         except ValueError:
             self.video_duration_min = None
+
+        try:
+            self.snapshot_interval= datetime.timedelta(minutes=int(self.snapshot_interval_conf))
+        except ValueError:
+            self.snapshot_interval = None
 
         self.light_level = 0.0
         try:
@@ -40,9 +48,6 @@ class Module(object):
             os.makedirs(CAMERA_STORAGE_PATH)
         except OSError:
             pass
-
-        # Do initial operations, capture a snapshot and start video recording
-        now = datetime.datetime.now()
 
         # Check how much space is left
         info = os.statvfs(CAMERA_STORAGE_PATH)
@@ -66,38 +71,21 @@ class Module(object):
                 print("Requesting shutdown because of camera initialization fail.")
             return
 
-        # Check for the amount of light
-        if not self._check_light_conditions():
-            print("Not enough light to record video.")
-            # turn off video recording
-            self._camera = None
-            self.video_duration='off'
-            # ask the system to shut-down
-            if self.camera_fail_shutdown:
-                self._boot.shutdown()
-                print("Requesting shutdown because of low-light conditions.")
-            return
-
         # Check for free space
         if free_space < 1:
-            print("Not enough free space (less than 1 GiB), do not save snapshots")
+            print("Not enough free space (less than 1 GiB), do not save snapshots or record")
+            return
         else:
-            # Store single snapshot only if above threshold
-            self._camera.capture(
-                os.path.join(
-                    CAMERA_STORAGE_PATH,
-                    'snapshot-{year}-{month:02d}-{day:02d}-{hour:02d}-{minute:02d}-{second:02d}-{light:.2f}.jpg'.format(
-                        year=now.year,
-                        month=now.month,
-                        day=now.day,
-                        hour=now.hour,
-                        minute=now.minute,
-                        second=now.second,
-                        light=self.light_level,
-                    )
-                ),
-                format='jpeg'
-            )
+            # Store single snapshot only if above threshold, else do not record
+            if not self._snapshot():
+                # turn off video recording
+                self._camera = None
+                self.video_duration='off'
+                # ask the system to shut-down
+                if self.camera_fail_shutdown:
+                    self._boot.shutdown()
+                    print("Requesting shutdown because of low-light conditions.")
+                return
 
         # Record a video of configured duration or until sleep.
         if self.video_duration == 'off':
@@ -155,6 +143,10 @@ class Module(object):
                     print("Video recording has stopped after: ",now - self._recording_start)
                 except:
                     pass
+
+            # make snapshots if so defined and not recording
+            if self.video_duration == 'off' and self.snapshot_interval is not None and now - self._last_snapshot >= self.snapshot_interval:
+                self._snapshot()
         return
 
     def _check_light_conditions(self):
@@ -168,11 +160,36 @@ class Module(object):
         light_level = 0.2126 * image[..., 0] + 0.7152 * image[..., 1] + 0.0722 * image[..., 2]
         light_level = np.average(light_level)
 
-        print("Detected light level:", light_level)
-
         self.light_level = light_level
 
         return light_level > self.minimum_light_level
+
+    def _snapshot(self):
+        """Make a snapshot if there is enough light"""
+        # Store single snapshot only if above threshold
+        if self._check_light_conditions()
+            now = datetime.datetime.now()
+            self._last_snapshot = now
+
+            self._camera.capture(
+                os.path.join(
+                    CAMERA_STORAGE_PATH,
+                    'snapshot-{year}-{month:02d}-{day:02d}-{hour:02d}-{minute:02d}-{second:02d}-{light:.2f}.jpg'.format(
+                        year=now.year,
+                        month=now.month,
+                        day=now.day,
+                        hour=now.hour,
+                        minute=now.minute,
+                        second=now.second,
+                        light=self.light_level,
+                    )
+                ),
+                format='jpeg'
+            )
+            print("Snapshot taken at light level:", self.light_level)
+            return True
+        else:
+            return False
 
     def shutdown(self, modules):
         """Shutdown module."""

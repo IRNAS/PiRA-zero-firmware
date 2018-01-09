@@ -167,7 +167,7 @@ class Module(object):
     def _snapshot(self):
         """Make a snapshot if there is enough light"""
         # Store single snapshot only if above threshold
-        if self._check_light_conditions()
+        if self._check_light_conditions():
             now = datetime.datetime.now()
             self._last_snapshot = now
 

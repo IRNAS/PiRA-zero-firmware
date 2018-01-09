@@ -72,6 +72,7 @@ The following environment variables can be used to configure the firmware:
   * `CAMERA_VIDEO_DURATION` (default `until-sleep`, duration in minutes or `off`)
   * `CAMERA_MIN_LIGHT_LEVEL` (default `0.0`, minimum required for video to start recording)
   * `CAMERA_FAIL_SHUTDOWN` (default `0`), can camera shutdown the device for example if not enough light, set to `1` to enable
+  * `CAMERA_SNAPSHOT_INTERVAL` (default `off`, duration in minutes to be configured)
 * Rockblock
   * `ROCKBLOCK_REPORT_INTERVAL` (default `24`)
   * `ROCKBLOCK_RETRIES` (default `2`)

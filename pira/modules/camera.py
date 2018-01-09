@@ -90,7 +90,6 @@ class Module(object):
         # Record a video of configured duration or until sleep.
         if self.video_duration == 'off':
             print("Not recording video as it is disabled.")
-            self._camera = None
             return
 
         # Check if there is enough space to start recording

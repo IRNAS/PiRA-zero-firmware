@@ -1,7 +1,7 @@
 # Arribada Antarctica Monitoring unit user instructions
 These user-instructions define the use-case of the device and serve as the guideline for development and creating the software support requirements.
 
-![antarctica_setup](antarctica-setup.jpg)
+![antarctica_setup](antactica-setup.jpg)
 
 Device consists of:
  * Camera unit:

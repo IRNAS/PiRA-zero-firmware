@@ -6,23 +6,23 @@ These user-instructions define the use-case of the device and serve as the guide
 Device consists of:
  * Camera unit:
     * Raspberry Pi Zero W
-    * Raspberry Pi camera V2
-    * Samsung Evo Plus 64GB microSD card
+    * Raspberry Pi Camera Module V2
+    * Samsung EVO Plus 64GB microSD card
     * Pira Zero V3
-    * 5x 18650 LiPo Cell 2900mAh/4.2V
-    * Nanuk 310 waterproof enclosure
+    * 6x 18650 LiPo Cell 2900mAh/4.2V
+    * Nanuk NANO 330 waterproof enclosure
     * Multi-directional camera mount
  * Solar power:
     * 2x Voltaic Systems 6V 6W solar panel
-    * 2x Voltaic Systems solar panel cable extension
+    * 2x Voltaic Systems solar panel extension cable
     * Multi-directional solar panel mount
  * Accessories
     * Allen-key tool for mounting
     * SD to microSD adapter
  * Additionally required and not included
-  * Pole (round or square) up to 50mm in diameter
-  * Metric wrench size 13
-  * Compass and tilt measuring device for pointing the solar panels
+    * Pole (round or square) up to 50mm in diameter
+    * Metric wrench size 13
+    * Compass and tilt measuring device for pointing the solar panels
 
 ## Key user features
  * Captures photos and videos in Full HD resolution

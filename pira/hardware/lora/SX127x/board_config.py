@@ -54,7 +54,7 @@ class BOARD:
         """
         BOARD.spi = spidev.SpiDev()
         BOARD.spi.open(spi_bus, spi_cs)
-        BOARD.spi.max_speed_hz=7800000
+        #BOARD.spi.max_speed_hz=7800000
         #Available speeds on RPi http://www.takaitra.com/posts/492
         return BOARD.spi
 

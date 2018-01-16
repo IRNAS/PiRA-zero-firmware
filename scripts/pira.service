@@ -1,5 +1,6 @@
 [Unit]
 Description=pira
+After=pigpiod.service
 
 [Service]
 EnvironmentFile=-/boot/config.env

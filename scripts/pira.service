@@ -5,6 +5,7 @@ After=pigpiod.service
 [Service]
 EnvironmentFile=-/boot/config.env
 ExecStart=/opt/pira/start.sh
+WorkingDirectory=/opt/pira
 Restart=on-failure
 
 [Install]

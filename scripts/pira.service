@@ -3,6 +3,7 @@ Description=pira
 After=pigpiod.service
 
 [Service]
+Environment=PYTHONUNBUFFERED=1
 EnvironmentFile=-/boot/config.env
 ExecStart=/opt/pira/start.sh
 WorkingDirectory=/opt/pira

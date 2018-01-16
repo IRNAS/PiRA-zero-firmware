@@ -10,10 +10,20 @@ class Module(object):
         self._ready = False
 
         # Initialize schedule.
-        schedule_start = self._parse_time(os.environ.get('SCHEDULE_START', '08:00'))
-        schedule_end = self._parse_time(os.environ.get('SCHEDULE_END', '18:00'))
-        schedule_t_off = self._parse_duration(os.environ.get('SCHEDULE_T_OFF', '35'))  # Time in minutes.
-        schedule_t_on = self._parse_duration(os.environ.get('SCHEDULE_T_ON', '15'))  # Time in minutes.
+        if os.environ.get('SCHEDULE_MONTHLY', '0') == '1':
+            # Month-dependent schedule.
+            month = datetime.date.today().month
+
+            schedule_start = self._parse_time(os.environ.get('SCHEDULE_MONTH{}_START'.format(month), '08:00'))
+            schedule_end = self._parse_time(os.environ.get('SCHEDULE_MONTH{}_END'.format(month), '18:00'))
+            schedule_t_off = self._parse_duration(os.environ.get('SCHEDULE_MONTH{}_T_OFF'.format(month), '35'))
+            schedule_t_on = self._parse_duration(os.environ.get('SCHEDULE_MONTH{}_T_ON'.format(month), '15'))
+        else:
+            # Static schedule.
+            schedule_start = self._parse_time(os.environ.get('SCHEDULE_START', '08:00'))
+            schedule_end = self._parse_time(os.environ.get('SCHEDULE_END', '18:00'))
+            schedule_t_off = self._parse_duration(os.environ.get('SCHEDULE_T_OFF', '35'))  # Time in minutes.
+            schedule_t_on = self._parse_duration(os.environ.get('SCHEDULE_T_ON', '15'))  # Time in minutes.
 
         if not schedule_start or not schedule_end or not schedule_t_off or not schedule_t_on:
             print("WARNING: Ignoring malformed schedule specification.")

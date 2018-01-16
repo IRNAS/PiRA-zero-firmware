@@ -1,0 +1,11 @@
+[Unit]
+Description=pira
+
+[Service]
+EnvironmentFile=-/boot/config.env
+ExecStart=/opt/pira/start.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

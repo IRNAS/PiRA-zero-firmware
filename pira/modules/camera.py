@@ -8,9 +8,6 @@ import numpy as np
 import picamera
 import picamera.array
 
-import resin
-
-
 # Image storage location.
 CAMERA_STORAGE_PATH = '/data/camera'
 

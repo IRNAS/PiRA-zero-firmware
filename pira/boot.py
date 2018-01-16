@@ -9,7 +9,13 @@ import traceback
 
 import RPi.GPIO as gpio
 import pigpio
-import resin
+
+# Optional Resin support.
+try:
+    import resin
+    RESIN_ENABLED = True
+except ImportError:
+    RESIN_ENABLED = False
 
 from .hardware import devices, bq2429x, mcp3021, rtc
 from .state import State
@@ -42,9 +48,11 @@ class Boot(object):
 
     def __init__(self):
         self.reason = Boot.BOOT_REASON_UNKNOWN
-        self._resin = resin.Resin()
         self._shutdown = False
         self._charging_status = collections.deque(maxlen=4)
+
+        if RESIN_ENABLED:
+            self._resin = resin.Resin()
 
     def setup_gpio(self):
         """Initialize GPIO."""
@@ -328,20 +336,26 @@ class Boot(object):
         # Configurable shutdown strategy, shutdown as an option, reboot as default
 
         if self.shutdown_strategy == 'shutdown':
-            # Shutdown will clear the self-enable pin by default
-            self._resin.models.supervisor.shutdown(
-                device_uuid=os.environ['RESIN_DEVICE_UUID'],
-                app_id=os.environ['RESIN_APP_ID']
-            )
+            # Shutdown will clear the self-enable pin by default.
+            if RESIN_ENABLED:
+                self._resin.models.supervisor.shutdown(
+                    device_uuid=os.environ['RESIN_DEVICE_UUID'],
+                    app_id=os.environ['RESIN_APP_ID']
+                )
+            else:
+                subprocess.Popen(["/sbin/shutdown", "--poweroff"])
         else:
             # Turn off the self-enable pin then reboot as safety if enabled by another source
             print('Shutting down as scheduled.')
             self.pigpio.write(devices.GPIO_SELF_ENABLE_PIN, gpio.LOW)
 
-            self._resin.models.supervisor.reboot(
-                device_uuid=os.environ['RESIN_DEVICE_UUID'],
-                app_id=os.environ['RESIN_APP_ID']
-            )
+            if RESIN_ENABLED:
+                self._resin.models.supervisor.reboot(
+                    device_uuid=os.environ['RESIN_DEVICE_UUID'],
+                    app_id=os.environ['RESIN_APP_ID']
+                )
+            else:
+                subprocess.Popen(["/sbin/shutdown", "--reboot"])
 
         # Block.
         while True:

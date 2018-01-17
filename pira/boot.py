@@ -364,7 +364,7 @@ class Boot(object):
                     app_id=os.environ['RESIN_APP_ID']
                 )
             else:
-                subprocess.Popen(["/sbin/shutdown", "--poweroff"])
+                subprocess.Popen(["/sbin/shutdown", "--poweroff", "now"])
         else:
             # Turn off the self-enable pin then reboot as safety if enabled by another source
             print('Shutting down as scheduled.')
@@ -376,7 +376,7 @@ class Boot(object):
                     app_id=os.environ['RESIN_APP_ID']
                 )
             else:
-                subprocess.Popen(["/sbin/shutdown", "--reboot"])
+                subprocess.Popen(["/sbin/shutdown", "--reboot", "now"])
 
         # Block.
         while True:

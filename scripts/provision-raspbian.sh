@@ -12,5 +12,12 @@ pip install astral
 # Install services.
 cp ${work_dir}/scripts/pira.service /lib/systemd/system/pira.service
 systemctl --system daemon-reload
-systemctl enable pira.service
+systemctl reenable pira.service
+
+# Optimize boot time by disabling some services.
+systemctl disable dhcpcd.service
+systemctl disable networking.service
+systemctl disable keyboard-setup.service
+systemctl disable hostapd.service
+systemctl disable udhcpd.service
 

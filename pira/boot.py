@@ -50,6 +50,7 @@ class Boot(object):
         self.reason = Boot.BOOT_REASON_UNKNOWN
         self._shutdown = False
         self._charging_status = collections.deque(maxlen=4)
+        self._wifi = None
 
         if RESIN_ENABLED:
             self._resin = resin.Resin()
@@ -92,7 +93,10 @@ class Boot(object):
         # Enable wifi.
         print("Enabling wifi.")
         try:
-            self._wifi = subprocess.Popen(["./wifi-connect", "--clear=false"])
+            if RESIN_ENABLED:
+                self._wifi = subprocess.Popen(["./wifi-connect", "--clear=false"])
+            else:
+                self._wifi = subprocess.Popen(["./scripts/start-networking.sh"])
         except:
             print("ERROR: Failed to start wifi-connect.")
 
@@ -275,8 +279,24 @@ class Boot(object):
 
     @property
     def is_wifi_enabled(self):
-        enable_when_not_charging = os.environ.get('WIFI_WHEN_NOT_CHARGING', '1') == '1'
-        return self.is_charging or enable_when_not_charging
+        wifi_mode = os.environ.get('WIFI_ENABLE_MODE', 'charging')
+
+        if wifi_mode == 'charging':
+            # Based on charging state.
+            enable_when_not_charging = os.environ.get('WIFI_WHEN_NOT_CHARGING', '1') == '1'
+            return self.is_charging or enable_when_not_charging
+        elif wifi_mode.startswith('gpio:'):
+            # Based on GPIO.
+            try:
+                _, pin = wifi_mode.split(':')
+                pin = int(pin)
+            except ValueError:
+                print("Invalid GPIO pin specified, treating WiFi as always enabled.")
+                return True
+
+            # Read from given GPIO pin.
+            self.pigpio.set_mode(pin, pigpio.INPUT)
+            return self.pigpio.read(pin) == gpio.HIGH
 
     def shutdown(self):
         """Request shutdown."""
@@ -307,7 +327,8 @@ class Boot(object):
 
         # Shut down devices.
         try:
-            self._wifi.kill()
+            if self._wifi:
+                self._wifi.kill()
         except:
             print("Error while shutting down devices.")
             traceback.print_exc()

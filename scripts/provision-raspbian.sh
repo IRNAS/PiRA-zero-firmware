@@ -18,6 +18,9 @@ systemctl reenable pira.service
 systemctl disable dhcpcd.service
 systemctl disable networking.service
 systemctl disable keyboard-setup.service
+systemctl disable avahi-daemon.service
+systemctl disable ssh.service
+systemctl disable bluetooth.service
 systemctl disable hostapd.service
 systemctl disable udhcpd.service
 

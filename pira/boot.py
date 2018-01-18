@@ -315,6 +315,10 @@ class Boot(object):
             print("Not shutting down as we are charging and are configured to not sleep when charging.")
             return
 
+        if self.is_wifi_enabled:
+            print("Not shutting down as WiFi is enabled.")
+            return
+
         self.log.insert(LOG_SYSTEM, 'shutdown')
 
         print("Requesting all modules to shut down.")

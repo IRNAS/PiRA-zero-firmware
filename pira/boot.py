@@ -373,7 +373,7 @@ class Boot(object):
                 )
             else:
                 subprocess.Popen(["/sbin/shutdown", "--poweroff", "now"])
-        elif self.shutdown_strategy == 'reboot-safe':
+        elif self.shutdown_strategy == 'safe':
             # Shutdown will clear the self-enable pin by default.
             if RESIN_ENABLED:
                 self._resin.models.supervisor.reboot(

@@ -79,7 +79,7 @@ class Boot(object):
 
         #Make GPIO always on so ti can be used to supply power to a switch
         self.pigpio.set_mode(devices.GPIO_SOFT_POWER_PIN, pigpio.OUTPUT)
-        self.pigpio.write(devices.GPIO_SOFT_POWER_PIN, gpio.HIGH)
+        self.pigpio.write(devices.GPIO_SOFT_POWER_PIN, gpio.LOW)
 
     def setup_devices(self):
         """Initialize device drivers."""
@@ -300,7 +300,7 @@ class Boot(object):
 
             # Read from given GPIO pin.
             self.pigpio.set_mode(pin, pigpio.INPUT)
-            return self.pigpio.read(pin) == gpio.HIGH
+            return self.pigpio.read(pin) == gpio.LOW
 
     def shutdown(self):
         """Request shutdown."""

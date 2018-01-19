@@ -77,6 +77,10 @@ class Boot(object):
 
         self.pigpio.set_mode(devices.GPIO_TIMER_DONE_PIN, pigpio.OUTPUT)
 
+        #Make GPIO always on so ti can be used to supply power to a switch
+        self.pigpio.set_mode(devices.GPIO_SOFT_POWER_PIN, pigpio.OUTPUT)
+        self.pigpio.write(devices.GPIO_SOFT_POWER_PIN, gpio.HIGH)
+
     def setup_devices(self):
         """Initialize device drivers."""
         print("Initializing device drivers...")

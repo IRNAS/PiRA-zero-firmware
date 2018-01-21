@@ -21,5 +21,8 @@ systemctl start pigpiod
 # make sure the cherger precharge current is sufficiently high
 i2cset -y 1 0x6b 0x03 0x73
 
+# Disable RTC driver if loaded.
+modprobe -q -r rtc-ds1307
+
 # Start the main application.
 python -m pira.main

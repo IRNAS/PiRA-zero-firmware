@@ -179,7 +179,7 @@ class Module(object):
                         minute=now.minute,
                         second=now.second,
                         light=self.light_level,
-                        voltage=self._boot.sensor_mcp.get_voltage()
+                        voltage=self._boot.sensor_mcp.get_voltage(),
                         temperature=self._boot.rtc.temperature,
                     )
                 ),

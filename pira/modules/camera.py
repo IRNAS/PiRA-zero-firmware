@@ -158,7 +158,7 @@ class Module(object):
 
         self.light_level = light_level
 
-        return light_level > self.minimum_light_level
+        return light_level >= self.minimum_light_level
 
     def _snapshot(self):
         """Make a snapshot if there is enough light"""

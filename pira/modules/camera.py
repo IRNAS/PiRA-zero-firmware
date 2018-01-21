@@ -171,7 +171,7 @@ class Module(object):
             self._camera.capture(
                 os.path.join(
                     CAMERA_STORAGE_PATH,
-                    'snapshot-{year}-{month:02d}-{day:02d}-{hour:02d}-{minute:02d}-{second:02d}-{light:.2f}-{voltage:.2f}V-{temperature:.2f}C.jpg'.format(
+                    'snapshot-{year}-{month:02d}-{day:02d}-{hour:02d}-{minute:02d}-{second:02d}-{light:.2f}-{voltage:.3f}V-{temperature:.2f}C.jpg'.format(
                         year=now.year,
                         month=now.month,
                         day=now.day,
@@ -179,8 +179,8 @@ class Module(object):
                         minute=now.minute,
                         second=now.second,
                         light=self.light_level,
-                        voltage=self._boot.sensor_mcp.get_voltage(),
-                        temperature=self._boot.rtc.temperature,
+                        voltage=float(self._boot.sensor_mcp.get_voltage()),
+                        temperature=float(self._boot.rtc.temperature),
                     )
                 ),
                 format='jpeg'

@@ -171,7 +171,7 @@ class Module(object):
             self._camera.capture(
                 os.path.join(
                     CAMERA_STORAGE_PATH,
-                    'snapshot-{year}-{month:02d}-{day:02d}-{hour:02d}-{minute:02d}-{second:02d}-{light:.2f}-{voltage:.3f}V-{temperature:.2f}C.jpg'.format(
+                    'snapshot-{year}-{month:02d}-{day:02d}--{hour:02d}-{minute:02d}-{second:02d}--{light:.2f}-{voltage:.3f}V-{temperature:.2f}C.jpg'.format(
                         year=now.year,
                         month=now.month,
                         day=now.day,

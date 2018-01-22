@@ -23,4 +23,4 @@ systemctl disable ssh.service
 systemctl disable bluetooth.service
 systemctl disable hostapd.service
 systemctl disable udhcpd.service
-
+systemctl disable hciuart

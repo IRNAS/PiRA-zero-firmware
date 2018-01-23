@@ -200,14 +200,12 @@ class RTC(object):
         msb = self._read(RTC.REGISTER_TEMPERATURE_MSB)
         lsb = self._read(RTC.REGISTER_TEMPERATURE_LSB)
 
-        val =
-
         # Temperature is signed, 2s complement
         if (msb >> 7):
             negative = 127
         else:
             negative = 0
-            
+
         msb &= 0b01111111
 
         return ((msb << 2) | (lsb >> 6)) * 0.25 - negative

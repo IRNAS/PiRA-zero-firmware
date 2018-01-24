@@ -287,7 +287,7 @@ class Boot(object):
 
         if wifi_mode == 'charging':
             # Based on charging state.
-            enable_when_not_charging = os.environ.get('WIFI_WHEN_NOT_CHARGING', '1') == '1'
+            enable_when_not_charging = os.environ.get('WIFI_WHEN_NOT_CHARGING', '0') == '1'
             return self.is_charging or enable_when_not_charging
         elif wifi_mode.startswith('gpio:'):
             # Based on GPIO.

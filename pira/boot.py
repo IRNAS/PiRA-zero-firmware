@@ -48,7 +48,7 @@ class Boot(object):
 
     def __init__(self):
         self.reason = Boot.BOOT_REASON_UNKNOWN
-        self._shutdown = False
+        self.shutdown = False
         self._charging_status = collections.deque(maxlen=4)
         self._wifi = None
 
@@ -242,7 +242,7 @@ class Boot(object):
             # Check if battery voltage is below threshold and shutdown
             if (self.sensor_mcp.get_voltage() <= os.environ.get('SHUTDOWN_VOLTAGE', '2.6')):
                 print("Voltage is under the threshold, need to shutdown.")
-                self._shutdown = True
+                self.shutdown = True
 
             # Save state.
             try:
@@ -251,11 +251,11 @@ class Boot(object):
                 print("Error while saving state.")
                 traceback.print_exc()
 
-            if self._shutdown:
+            if self.shutdown:
                 # Perform shutdown when requested. This will either request the Resin
                 # supervisor to shut down and block forever or the shutdown request will
                 # be ignored and we will continue processing.
-                self._shutdown = False
+                self.shutdown = False
                 self._perform_shutdown()
 
             time.sleep(30)
@@ -305,7 +305,7 @@ class Boot(object):
     def shutdown(self):
         """Request shutdown."""
         print("Module has requested shutdown.")
-        self._shutdown = True
+        self.shutdown = True
 
     def _perform_shutdown(self):
         """Perform shutdown."""

@@ -83,7 +83,7 @@ class Module(object):
         # Check if we have been online too long and shutdown.
         if (datetime.datetime.now() - self._started) >= self._on_duration:
             print("Have been online for too long, need to shutdown.")
-            self._boot.shutdown()
+            self._boot.shutdown = True
 
     def shutdown(self, modules):
         """Compute next alarm before shutdown."""

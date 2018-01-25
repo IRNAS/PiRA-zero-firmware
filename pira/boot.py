@@ -227,6 +227,10 @@ class Boot(object):
         while True:
             self._update_charging()
 
+            # Store some general log entries.
+            self.log.insert(LOG_DEVICE_VOLTAGE, self.sensor_mcp.get_voltage())
+            self.log.insert(LOG_DEVICE_TEMPERATURE, self.rtc.temperature)
+
             # Process all modules.
             for name, module in self.modules.items():
                 try:
@@ -234,10 +238,6 @@ class Boot(object):
                 except:
                     print("Error while running processing in module '{}'.".format(name))
                     traceback.print_exc()
-
-            # Store some general log entries.
-            self.log.insert(LOG_DEVICE_VOLTAGE, self.sensor_mcp.get_voltage())
-            self.log.insert(LOG_DEVICE_TEMPERATURE, self.rtc.temperature)
 
             # Check if battery voltage is below threshold and shutdown
             if (self.sensor_mcp.get_voltage() <= os.environ.get('SHUTDOWN_VOLTAGE', '2.6')):

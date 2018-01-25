@@ -47,38 +47,43 @@ class Module(object):
 
         return value
 
+    def _initialize_lora_module(self):
+        # Initialize LoRa driver if needed.
+
+        try:
+            #first reset
+            print("LoRa hardware reset.")
+            self._boot.pigpio.set_mode(devices.GPIO_LORA_RESET_PIN, pigpio.OUTPUT)
+            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
+            time.sleep(0.01)
+            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.LOW)
+            time.sleep(0.001)
+            self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
+            time.sleep(0.006)
+
+            self._lora = LoRa(verbose=False)
+            self._lora.set_mode(lora.MODE.SLEEP)
+            self._lora.set_dio_mapping([0, 0, 0, 0, 0, 0])
+            self._lora.set_freq(868.1)
+            self._lora.set_pa_config(pa_select=1)
+            self._lora.set_spreading_factor(self._spread_factor)
+            self._lora.set_pa_config(max_power=0x0F, output_power=0x0E)
+            self._lora.set_sync_word(0x34)
+            self._lora.set_rx_crc(True)
+
+        except AssertionError:
+            self._lora = None
+            print("WARNING: LoRa is not correctly initialized, skipping.")
+            return
+
     def process(self, modules):
         if not self._enabled:
             print("WARNING: LoRa is not correctly configured, skipping.")
             return
 
-        # Initialize LoRa driver if needed.
+        #Initialize lora modue if needed
         if not self._lora:
-            try:
-                #first reset
-                print("LoRa hardware reset.")
-                self._boot.pigpio.set_mode(devices.GPIO_LORA_RESET_PIN, pigpio.OUTPUT)
-                self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
-                time.sleep(0.01)
-                self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.LOW)
-                time.sleep(0.001)
-                self._boot.pigpio.write(devices.GPIO_LORA_RESET_PIN, gpio.HIGH)
-                time.sleep(0.006)
-
-                self._lora = LoRa(verbose=False)
-                self._lora.set_mode(lora.MODE.SLEEP)
-                self._lora.set_dio_mapping([0, 0, 0, 0, 0, 0])
-                self._lora.set_freq(868.1)
-                self._lora.set_pa_config(pa_select=1)
-                self._lora.set_spreading_factor(self._spread_factor)
-                self._lora.set_pa_config(max_power=0x0F, output_power=0x0E)
-                self._lora.set_sync_word(0x34)
-                self._lora.set_rx_crc(True)
-
-            except AssertionError:
-                self._lora = None
-                print("WARNING: LoRa is not correctly initialized, skipping.")
-                return
+            self._initialize_lora_module()
 
         # Transmit message.
         measurements = [

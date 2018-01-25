@@ -90,6 +90,21 @@ class Module(object):
         if not self._ready:
             return
 
+        # Check voltage to configure boot interval
+        voltage = self._boot.sensor_mcp.get_voltage()
+
+        if not voltage > os.environ.get('POWER_THRESHOLD_HALF', '0'):
+            # Lower voltage then half threshold, doubling the sleep length
+            self._off_duration = self._off_duration * 2
+            print("Low voltage warning, doubling sleep duration")
+        elif not voltage > os.environ.get('POWER_THRESHOLD_QUART', '0'):
+            # Less voltage then quarter threshold, quadrupling the sleep length
+            self._off_duration = self._off_duration * 4
+            print("Low voltage warning, quadrupling sleep duration")
+        else:
+            # Sufficient power, continue as planned
+            pass
+
         current_time = self._boot.rtc.current_time
         wakeup_time = None
         if current_time.time() > self._schedule_start and current_time.time() < self._schedule_end:

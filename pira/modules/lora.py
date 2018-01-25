@@ -36,6 +36,7 @@ class Module(object):
             self._apps_key = self._decode_hex('LORA_APPS_KEY', length=16)
             self._spread_factor = int(os.environ.get('LORA_SPREAD_FACTOR', '7'))
             self._enabled = True
+            self._initialize_lora_module()
         except:
             self._enabled = False
 

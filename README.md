@@ -59,14 +59,21 @@ The following environment variables can be used to configure the firmware:
   * `SLEEP_WHEN_CHARGING` (default `0`) when set to `1` the unit will sleep while it is charging.
   * `SLEEP_NEVER` (default `0`) when set to `1` the unit will never go to sleep.
   * `WIFI_WHEN_NOT_CHARGING` (default `1`) when set to `0` wifi will be disable while not charging.
+  * `WIFI_ENABLE_MODE` (default `charging`), can be `gpio:5` where number can be any BCM pin
+  * `WIFI_SSID` (default `pira-01`), on non-resin ONLY for now
+  * `WIFI_PASSWORD` (default `pirapira`), on non-resin ONLY for now
   * `MODULES` a comma separated list of modules to load, the following is a list of all modules currently available `pira.modules.scheduler,pira.modules.ultrasonic,pira.modules.camera,pira.modules.lora,pira.modules.rockblock,pira.modules.debug,pira.modules.webserver`, delete the ones you do not wish to use.
   * `SHUTDOWN_STRATEGY` (default `reboot`) to configure if the unit will self-disable through GPIO and do a reboot (prevents hanging in shutdown if externally enabled by hardware) or `shutdown` strategy that will do a proper shutdown that is corruption safe, but may result in hanging in shutdown state or  `safe` that will do same as shutdown but with reboot and hope system clears the self-enable pin.
   * `SHUTDOWN_VOLTAGE` (default `2.6`V) to configure when the system should shutdown. At 2.6V hardware shutdown will occur, suggested value is 2.3-3V. When this is triggered, the device will wake up next based on the configured interval, unless the battery voltage continues to fall under the hardware limit, then it will boot again when it charges. Note this shutdown will be aborted if `SLEEP_WHEN_CHARGING==0` or `SLEEP_NEVER==1`
+  * `LATITUDE` (default `0`) to define location, used for sunrise/sunset calculation
+  * `LONGITUDE` (default `0`) to define location
 * Scheduler
-  * `SCHEDULE_START` (default `08:00`)
-  * `SCHEDULE_END` (default `18:00`)
+  * `SCHEDULE_START` (default `08:00`), option is also `sunrise` calculated automatically if lat/long are defined
+  * `SCHEDULE_END` (default `18:00`), option is also `sunset`calculated automatically if lat/long are defined
   * `SCHEDULE_T_ON` (default `15`)
   * `SCHEDULE_T_OFF` (default `35`)
+  * `POWER_THRESHOLD_HALF` (default `0`), voltage at which `SCHEDULE_T_OFF` time is doubled, suggested `3.7`
+  * `POWER_THRESHOLD_QUART` (default `0`), voltage at which `SCHEDULE_T_OFF` time is quadrupled, suggested `3.4`
 * Camera
   * `CAMERA_RESOLUTION` (default `1280x720`, options are `1280x720`, `1920x1080`, `2592x1952` and some others. Mind fi copying resolution that you use the letter `x` not a multiply character.)
   * `CAMERA_VIDEO_DURATION` (default `until-sleep`, duration in minutes or `off`)

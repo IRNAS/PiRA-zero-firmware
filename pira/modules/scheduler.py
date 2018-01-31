@@ -14,6 +14,8 @@ class Module(object):
     def __init__(self, boot):
         self._boot = boot
         self._ready = False
+        
+        print("Sunrise at {}. Sunset at {}".format(self._parse_time("sunrise"),self._parse_time("sunset")))
 
         # Initialize schedule.
         if os.environ.get('SCHEDULE_MONTHLY', '0') == '1':

@@ -70,8 +70,8 @@ The following environment variables can be used to configure the firmware:
 * Scheduler
   * `SCHEDULE_START` (default `08:00`), option is also `sunrise` calculated automatically if lat/long are defined
   * `SCHEDULE_END` (default `18:00`), option is also `sunset`calculated automatically if lat/long are defined
-  * `SCHEDULE_T_ON` (default `15`)
-  * `SCHEDULE_T_OFF` (default `35`)
+  * `SCHEDULE_T_ON` (default `15`), remains on for specified time in minutes
+  * `SCHEDULE_T_OFF` (default `35`), remains off for specified time in minutes
   * `POWER_THRESHOLD_HALF` (default `0`), voltage at which `SCHEDULE_T_OFF` time is doubled, suggested `3.7`
   * `POWER_THRESHOLD_QUART` (default `0`), voltage at which `SCHEDULE_T_OFF` time is quadrupled, suggested `3.4`
 * Camera

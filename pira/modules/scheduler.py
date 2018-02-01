@@ -14,7 +14,7 @@ class Module(object):
     def __init__(self, boot):
         self._boot = boot
         self._ready = False
-        
+
         print("Sunrise at {}. Sunset at {}".format(self._parse_time("sunrise"),self._parse_time("sunset")))
 
         # Initialize schedule.
@@ -109,7 +109,9 @@ class Module(object):
 
         current_time = self._boot.rtc.current_time
         wakeup_time = None
-        if current_time.time() > self._schedule_start and current_time.time() < self._schedule_end:
+        if self._schedule_end >= self._schedule_start and current_time.time() > self._schedule_start and current_time.time() < self._schedule_end:
+            wakeup_time = (current_time + self._off_duration).time()
+        elif self._schedule_end < self._schedule_start and ((current_time.time() < self._schedule_start and current_time.time() < self._schedule_end) or (current_time.time() >= self._schedule_start and current_time.time() >= self._schedule_end)):
             wakeup_time = (current_time + self._off_duration).time()
         else:
             wakeup_time = self._schedule_start

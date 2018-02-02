@@ -34,8 +34,11 @@ class Module(object):
             schedule_t_on = self._parse_duration(os.environ.get('SCHEDULE_T_ON', '15'))  # Time in minutes.
 
         if not schedule_start or not schedule_end or schedule_t_off is None or schedule_t_on is None:
-            print("WARNING: Ignoring malformed schedule specification.")
-            return
+            print("WARNING: Ignoring malformed schedule specification, using safe values.")
+            schedule_start = self._parse_time('00:01')
+            schedule_end = self._parse_time('23:59')
+            schedule_t_off = self._parse_duration('59')  # Time in minutes.
+            schedule_t_on = self._parse_duration('1')  # Time in minutes.
 
         self._started = datetime.datetime.now()
         self._schedule_start = schedule_start

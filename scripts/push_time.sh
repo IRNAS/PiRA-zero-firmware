@@ -1,11 +1,22 @@
 #!/bin/bash
 
-my_dir="`dirname \"$0\"`"
-my_dir="`( cd \"$my_dir\" && pwd )`"
-if [ -z "$my_dir" ] ; then
-  exit 1
+
+log '  Writing system time to RTC...'
+
+modprobe rtc-ds1307
+if [ ! -d /sys/class/i2c-adapter/i2c-1/1-0068 ]; then
+local output=$((sh -c 'echo ds1307 0x68 > /sys/class/i2c-adapter/i2c-1/new_device') 2>&1)
+if [ ! -z "$output" ] && [ "sh: echo: I/O error" != "$output" ] ; then
+  log "$output"
 fi
-. $my_dir/utilities.sh
+fi
 
+local err=$((hwclock -w) 2>&1)
+if [ "$err" == "" ] ; then
+log '  Done :-)'
+else
+log '  Failed :-('
+log "$err"
+fi
 
-system_to_rtc
+rmmod rtc-ds1307

@@ -53,9 +53,6 @@ class Boot(object):
         self._charging_status = collections.deque(maxlen=4)
         self._wifi = None
 
-        if RESIN_ENABLED:
-            self._resin = resin.Resin()
-
     def setup_gpio(self):
         """Initialize GPIO."""
         print("Initializing GPIO...")
@@ -380,19 +377,13 @@ class Boot(object):
         if self.shutdown_strategy == 'shutdown':
             # Shutdown will clear the self-enable pin by default.
             if RESIN_ENABLED:
-                self._resin.models.supervisor.shutdown(
-                    device_uuid=os.environ['RESIN_DEVICE_UUID'],
-                    app_id=os.environ['RESIN_APP_ID']
-                )
+                subprocess.Popen(["./scripts/resin-shutdown.sh"])
             else:
                 subprocess.Popen(["/sbin/shutdown", "--poweroff", "now"])
         elif self.shutdown_strategy == 'safe':
             # Shutdown will clear the self-enable pin by default.
             if RESIN_ENABLED:
-                self._resin.models.supervisor.reboot(
-                    device_uuid=os.environ['RESIN_DEVICE_UUID'],
-                    app_id=os.environ['RESIN_APP_ID']
-                )
+                subprocess.Popen(["./scripts/resin-reboot.sh"])
             else:
                 subprocess.Popen(["/sbin/shutdown", "--reboot", "now"])
         else:
@@ -401,10 +392,7 @@ class Boot(object):
             self.pigpio.write(devices.GPIO_SELF_ENABLE_PIN, gpio.LOW)
 
             if RESIN_ENABLED:
-                self._resin.models.supervisor.reboot(
-                    device_uuid=os.environ['RESIN_DEVICE_UUID'],
-                    app_id=os.environ['RESIN_APP_ID']
-                )
+                subprocess.Popen(["./scripts/resin-reboot.sh"])
             else:
                 subprocess.Popen(["/sbin/shutdown", "--reboot", "now"])
 

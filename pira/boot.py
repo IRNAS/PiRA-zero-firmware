@@ -377,13 +377,13 @@ class Boot(object):
         if self.shutdown_strategy == 'shutdown':
             # Shutdown will clear the self-enable pin by default.
             if RESIN_ENABLED:
-                subprocess.call(["./scripts/resin-shutdown.sh"])
+                subprocess.call(["/usr/src/app/scripts/resin-shutdown.sh"])
             else:
                 subprocess.Popen(["/sbin/shutdown", "--poweroff", "now"])
         elif self.shutdown_strategy == 'safe':
             # Shutdown will clear the self-enable pin by default.
             if RESIN_ENABLED:
-                subprocess.call(["./scripts/resin-reboot.sh"])
+                subprocess.call(["/usr/src/app/scripts/resin-reboot.sh"])
             else:
                 subprocess.Popen(["/sbin/shutdown", "--reboot", "now"])
         else:
@@ -392,7 +392,7 @@ class Boot(object):
             self.pigpio.write(devices.GPIO_SELF_ENABLE_PIN, gpio.LOW)
 
             if RESIN_ENABLED:
-                subprocess.call(["./scripts/resin-reboot.sh"])
+                subprocess.call(["/usr/src/app/scripts/resin-reboot.sh"])
             else:
                 subprocess.Popen(["/sbin/shutdown", "--reboot", "now"])
 

@@ -96,7 +96,7 @@ class Boot(object):
         print("Enabling wifi.")
         try:
             if RESIN_ENABLED:
-                self._wifi = subprocess.Popen(["./wifi-connect"])
+                #self._wifi = subprocess.Popen(["./wifi-connect"])
             else:
                 subprocess.call(["./scripts/start-networking.sh"])
         except:

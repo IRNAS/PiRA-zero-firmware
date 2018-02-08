@@ -51,27 +51,47 @@ The following fleet configuration variables must be defined for correct operatio
  * `RESIN_HOST_CONFIG_start_x` to value `1`, required by camera
  * `RESIN_SUPERVISOR_DELTA` to value `1`, so updates are faster, optional.
 
+## Behavior sleep
+ * `on` - never go to sleep
+ * `charging` - never sleep when charging
+ * `debug` - never go to sleep when debug conditions are met
+ * `off` - go to sleep imediately
+
+## Behavior wifi WIFI_ENABLE_MODE
+* `on` - always on when device is turned on
+* `charging` - only when charging and debug
+* `debug` - only when debug
+* `off` -  always off
+
+
 ## Supported environment variables
 
 The following environment variables can be used to configure the firmware:
 
 * Global
-  * `SLEEP_WHEN_CHARGING` (default `0`) when set to `1` the unit will sleep while it is charging.
-  * `SLEEP_NEVER` (default `0`) when set to `1` the unit will never go to sleep.
-  * `WIFI_WHEN_NOT_CHARGING` (default `1`) when set to `0` wifi will be disable while not charging.
-  * `WIFI_ENABLE_MODE` (default `charging`), can be `gpio:5` where number can be any BCM pin
+  * `SLEEP_ENABLE_MODE` (default `sleep`) , options are:
+    * `on` - do not sleep
+    * `charging` - do not sleep when charging
+    * `debug` - sleep even if debug mode is enabled
+    * `sleep` - never sleep
+  * `WIFI_ENABLE_MODE` (default `on`) , options are:
+    * `on` - always on when device is turned on
+    * `charging` - only when charging
+    * `debug` - only when debug
+    * `off` -  always off
   * `WIFI_SSID` (default `pira-01`), on non-resin ONLY for now
   * `WIFI_PASSWORD` (default `pirapira`), on non-resin ONLY for now
+  * `DEBUG_ENABLE_MODE` (default `none`), can be `gpio:5` where number can be any BCM pin to turn on debug
   * `MODULES` a comma separated list of modules to load, the following is a list of all modules currently available `pira.modules.scheduler,pira.modules.ultrasonic,pira.modules.camera,pira.modules.lora,pira.modules.rockblock,pira.modules.debug,pira.modules.webserver`, delete the ones you do not wish to use.
   * `SHUTDOWN_STRATEGY` (default `reboot`) to configure if the unit will self-disable through GPIO and do a reboot (prevents hanging in shutdown if externally enabled by hardware) or `shutdown` strategy that will do a proper shutdown that is corruption safe, but may result in hanging in shutdown state or  `safe` that will do same as shutdown but with reboot and hope system clears the self-enable pin.
-  * `SHUTDOWN_VOLTAGE` (default `2.6`V) to configure when the system should shutdown. At 2.6V hardware shutdown will occur, suggested value is 2.3-3V. When this is triggered, the device will wake up next based on the configured interval, unless the battery voltage continues to fall under the hardware limit, then it will boot again when it charges. Note this shutdown will be aborted if `SLEEP_WHEN_CHARGING==0` or `SLEEP_NEVER==1`
+  * `SHUTDOWN_VOLTAGE` (default `2.6`V) to configure when the system should shutdown. At 2.6V hardware shutdown will occur, suggested value is 2.3-3V. When this is triggered, the device will wake up next based on the configured interval, unless the battery voltage continues to fall under the hardware limit, then it will boot again when it charges. Note this shutdown will be aborted if in debug mode.
   * `LATITUDE` (default `0`) to define location, used for sunrise/sunset calculation
   * `LONGITUDE` (default `0`) to define location
 * Scheduler
-  * `SCHEDULE_START` (default `08:00`), option is also `sunrise` calculated automatically if lat/long are defined
-  * `SCHEDULE_END` (default `18:00`), option is also `sunset`calculated automatically if lat/long are defined
-  * `SCHEDULE_T_ON` (default `15`), remains on for specified time in minutes
-  * `SCHEDULE_T_OFF` (default `35`), remains off for specified time in minutes
+  * `SCHEDULE_START` (default `00:01`), option is also `sunrise` calculated automatically if lat/long are defined
+  * `SCHEDULE_END` (default `23:59`), option is also `sunset`calculated automatically if lat/long are defined
+  * `SCHEDULE_T_ON` (default `5`), remains on for specified time in minutes
+  * `SCHEDULE_T_OFF` (default `55`), remains off for specified time in minutes
   * `POWER_THRESHOLD_HALF` (default `0`), voltage at which `SCHEDULE_T_OFF` time is doubled, suggested `3.7`
   * `POWER_THRESHOLD_QUART` (default `0`), voltage at which `SCHEDULE_T_OFF` time is quadrupled, suggested `3.4`
 * Camera

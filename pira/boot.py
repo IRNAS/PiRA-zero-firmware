@@ -49,6 +49,7 @@ class Boot(object):
     def __init__(self):
         self.reason = Boot.BOOT_REASON_UNKNOWN
         self.shutdown = False
+        self.shutdown_hold = None
         self._charging_status = collections.deque(maxlen=4)
         self._wifi = None
 
@@ -226,6 +227,8 @@ class Boot(object):
         print("Starting processing loop.")
         while True:
             self._update_charging()
+            # Shutdown hold is reset in every loop
+            self.shutdown_hold = None
 
             # Store some general log entries.
             self.log.insert(LOG_DEVICE_VOLTAGE, self.sensor_mcp.get_voltage())
@@ -270,14 +273,6 @@ class Boot(object):
         self._charging_status.append(not not_charging)
 
     @property
-    def should_sleep_when_charging(self):
-        return os.environ.get('SLEEP_WHEN_CHARGING', '0') == '1'
-
-    @property
-    def should_never_sleep(self):
-        return os.environ.get('SLEEP_NEVER', '0') == '1'
-
-    @property
     def is_charging(self):
         return any(self._charging_status)
 
@@ -286,16 +281,25 @@ class Boot(object):
         wifi_mode = os.environ.get('WIFI_ENABLE_MODE', 'charging')
 
         if wifi_mode == 'charging':
-            # Based on charging state.
-            enable_when_not_charging = os.environ.get('WIFI_WHEN_NOT_CHARGING', '0') == '1'
-            return self.is_charging or enable_when_not_charging
-        elif wifi_mode.startswith('gpio:'):
+            return self.is_charging == 1
+        elif wifi_mode == 'on':
+            return True
+        elif wifi_mode == 'debug':
+            return self.is_debug_enabled == 1
+        elif wifi_mode == 'off':
+            return False
+
+    @property
+    def is_debug_enabled(self):
+        debug_mode = os.environ.get('DEBUG_ENABLE_MODE', 'none')
+
+        if debug_mode.startswith('gpio:'):
             # Based on GPIO.
             try:
-                _, pin = wifi_mode.split(':')
+                _, pin = debug_mode.split(':')
                 pin = int(pin)
             except ValueError:
-                print("Invalid GPIO pin specified, treating WiFi as always enabled.")
+                print("Invalid GPIO pin specified for debug.")
                 return True
 
             # Read from given GPIO pin.
@@ -310,17 +314,26 @@ class Boot(object):
     def _perform_shutdown(self):
         """Perform shutdown."""
 
-        # If configured to never sleep, then do not go to sleep in any case
-        if self.should_never_sleep:
-            print("Not shutting down as we should never sleep.")
+        sleep_mode = os.environ.get('SLEEP_ENABLE_MODE', 'sleep')
+
+        if sleep_mode == 'charging' and self.is_charging == 1:
+            print("Not shutting down: Charging.")
+            return
+        elif sleep_mode == 'off':
+            print("Not shutting down: Sleep off.")
+            return
+        elif sleep_mode == 'sleep':
+            pass
+
+        if sleep_mode == 'debug' and self.is_debug_enabled == 1:
+            print("Shutting down even during debug.")
+            pass
+        elif self.is_debug_enabled == 1:
+            print("Not shutting down: Debug on.")
             return
 
-        if self.is_charging and not self.should_sleep_when_charging:
-            print("Not shutting down as we are charging and are configured to not sleep when charging.")
-            return
-
-        if self.is_wifi_enabled:
-            print("Not shutting down as WiFi is enabled.")
+        if not self.shutdown_hold == None:
+            print("Not shutting down: On hold due to: "+self.shutdown_hold)
             return
 
         self.log.insert(LOG_SYSTEM, 'shutdown')

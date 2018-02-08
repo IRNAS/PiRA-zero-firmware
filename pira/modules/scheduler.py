@@ -28,10 +28,10 @@ class Module(object):
             schedule_t_on = self._parse_duration(os.environ.get('SCHEDULE_MONTH{}_T_ON'.format(month), '15'))
         else:
             # Static schedule.
-            schedule_start = self._parse_time(os.environ.get('SCHEDULE_START', '08:00'))
-            schedule_end = self._parse_time(os.environ.get('SCHEDULE_END', '18:00'))
-            schedule_t_off = self._parse_duration(os.environ.get('SCHEDULE_T_OFF', '35'))  # Time in minutes.
-            schedule_t_on = self._parse_duration(os.environ.get('SCHEDULE_T_ON', '15'))  # Time in minutes.
+            schedule_start = self._parse_time(os.environ.get('SCHEDULE_START', '00:01'))
+            schedule_end = self._parse_time(os.environ.get('SCHEDULE_END', '23:59'))
+            schedule_t_off = self._parse_duration(os.environ.get('SCHEDULE_T_OFF', '55'))  # Time in minutes.
+            schedule_t_on = self._parse_duration(os.environ.get('SCHEDULE_T_ON', '5'))  # Time in minutes.
 
         if not schedule_start or not schedule_end or schedule_t_off is None or schedule_t_on is None:
             print("WARNING: Ignoring malformed schedule specification, using safe values.")
@@ -87,7 +87,7 @@ class Module(object):
 
         # Check if we have been online too long and shutdown.
         if (datetime.datetime.now() - self._started) >= self._on_duration:
-            print("Have been online for too long, need to shutdown.")
+            print("Scheduler: Time to sleep.")
             self._boot.shutdown = True
 
     def shutdown(self, modules):

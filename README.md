@@ -70,7 +70,7 @@ The following environment variables can be used to configure the firmware:
 
 * Global
   * `SLEEP_ENABLE_MODE` (default `sleep`) , options are:
-    * `on` - do not sleep
+    * `off` - do not sleep
     * `charging` - do not sleep when charging
     * `debug` - sleep even if debug mode is enabled
     * `sleep` - never sleep

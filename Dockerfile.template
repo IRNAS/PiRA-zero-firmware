@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 RUN apt-get update && \
     apt-get install -yq \
         i2c-tools python-smbus pigpio libfreetype6-dev libjpeg-dev build-essential \
-        dnsmasq && \
+        dnsmasq wireless-tools && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install resin-wifi-connect.

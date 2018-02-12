@@ -96,7 +96,7 @@ class Boot(object):
         print("Enabling wifi.")
         try:
             if RESIN_ENABLED:
-                #self._wifi = subprocess.Popen(["./wifi-connect"])
+                self._wifi = subprocess.Popen(["./scripts/wifi-connect-start.sh"])
                 pass
             else:
                 subprocess.call(["./scripts/start-networking.sh"])
@@ -374,6 +374,7 @@ class Boot(object):
         self.shutdown_strategy = os.environ.get('SHUTDOWN_STRATEGY', 'reboot')
 
         # Configurable shutdown strategy, shutdown as an option, reboot as default
+        # TODO: handle error curl: (7) Failed to connect to 127.0.0.1 port 48484: Connection refused
 
         if self.shutdown_strategy == 'shutdown':
             # Shutdown will clear the self-enable pin by default.

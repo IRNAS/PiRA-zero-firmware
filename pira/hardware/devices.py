@@ -19,3 +19,6 @@ GPIO_ULTRASONIC_RX_PIN = 25
 
 # Lora modem.
 GPIO_LORA_RESET_PIN = 13
+
+# Plantower
+PLANTOWER_UART = '/dev/ttyAMA0'

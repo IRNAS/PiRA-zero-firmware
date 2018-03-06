@@ -30,12 +30,12 @@ class PLANTOWER(object):
         pm10 = []
 
         # configure sensor in passive mode
-        ser.write([66, 77, 225, 0, 0, 1, 112])
+        self.ser.write([66, 77, 225, 0, 0, 1, 112])
         while time.time() - start < timeout:
             try:
-                ser.flushInput()
-                ser.write([66, 77, 226, 0, 0, 1, 113])   # ask for data
-                s = ser.read(32)
+                self.ser.flushInput()
+                self.ser.write([66, 77, 226, 0, 0, 1, 113])   # ask for data
+                s = self.ser.read(32)
                 # Check if data header is correct
                 if s[0] == int("42",16) and s[1] == int("4d",16):
                     print("Header is correct")

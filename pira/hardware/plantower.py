@@ -7,12 +7,12 @@ class PLANTOWER(object):
 
     def __init__(self, portId):
 
-        self.s = None
+        self.ser = None
         self.portId = portId
 
         try:
 
-            self.s = serial.Serial(self.portId, baudrate=9600, stopbits=1, parity="N",  timeout=2)
+            self.ser = serial.Serial(self.portId, baudrate=9600, stopbits=1, parity="N",  timeout=2)
 
         except (Exception):
             raise plantowerException

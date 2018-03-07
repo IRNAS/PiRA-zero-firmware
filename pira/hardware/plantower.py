@@ -36,7 +36,7 @@ class PLANTOWER(object):
                 self.ser.flushInput()
                 self.ser.write([66, 77, 226, 0, 0, 1, 113])   # ask for data
                 s = self.ser.read(32)
-                print(s)
+                print(':'.join(x.encode('hex') for x in s))
                 # Check if data header is correct
                 if s[0] == int("42",16) and s[1] == int("4d",16):
                     print("Header is correct")

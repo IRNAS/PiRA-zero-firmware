@@ -36,6 +36,7 @@ class PLANTOWER(object):
                 self.ser.flushInput()
                 self.ser.write([66, 77, 226, 0, 0, 1, 113])   # ask for data
                 s2 = self.ser.read(32)
+                print(':'.join(x.encode('hex') for x in s2))
                 s1=':'.join(x.encode('hex') for x in s2)
                 s = []
                 for index, item in enumerate(s1):

@@ -42,7 +42,8 @@ class PLANTOWER(object):
                 s = []
                 for index, item in enumerate(s1):
                     s.append(int(item,16))
-                print("s "+s)
+                print(s)
+
                 if s[0] == 0x42 and s[1] == 0x4d:
                     print("Header is correct")
                     cs = (s[30] * 256 + s[31])   # check sum
@@ -106,7 +107,7 @@ class PLANTOWER(object):
                         print("PM1:", pm1_atm, "ug/m^3  PM2.5:", pm25_atm, "ug/m^3  PM10:", pm10_atm, "ug/m^3")
                         print("Number of particles:")
                         print(">0.3:", part_03, " >0.5:", part_05, " >1.0:", part_1, " >2.5:", part_25, " >5:", part_5, " >10:", part_10)
-                        sleep(1)
+                        #sleep(1)
                 else:
                     print("Header is wrong")
             except ValueError:

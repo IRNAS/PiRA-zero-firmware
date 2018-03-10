@@ -40,8 +40,8 @@ class PLANTOWER(object):
                 s1=':'.join(x.encode('hex') for x in s2)
                 print("s1 "+s1)
                 s = []
-                for index, item in enumerate(s1):
-                    s.append(int(item,16))
+                #for index, item in enumerate(s1):
+                    #s.append(int(item,16))
                 print("s ")
                 print(s)
 

@@ -37,7 +37,7 @@ class PLANTOWER(object):
                 self.ser.write([66, 77, 226, 0, 0, 1, 113])   # ask for data
                 s2 = self.ser.read(32)
                 s1=':'.join(x.encode('hex') for x in s2)
-                s = []
+                s = [] 
                 for index, item in enumerate(s1):
                     s.append(int(item,16))
 

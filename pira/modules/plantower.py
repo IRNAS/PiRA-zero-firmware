@@ -14,10 +14,6 @@ MEASUREMENT_PLANTOWER_PM10 = MeasurementConfig(LOG_PLANTOWER_PM10, int)
 
 
 class Module(object):
-    # Last measured air quality
-    pm1 = None
-    pm25 = None
-    pm10 = None
 
     def __init__(self, boot):
         self._boot = boot
@@ -34,9 +30,9 @@ class Module(object):
         pm10 = self.measurements[2]
 
         # Record measurement in log.
-        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM1, self.pm1)
-        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM25, self.pm25)
-        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM10, self.pm10)
+        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM1, pm1)
+        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM25, pm25)
+        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM10, pm10)
 
     def shutdown(self, modules):
         """Shutdown module."""

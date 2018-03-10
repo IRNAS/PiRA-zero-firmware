@@ -37,10 +37,7 @@ class PLANTOWER(object):
                 self.ser.write([66, 77, 226, 0, 0, 1, 113])   # ask for data
                 s = self.ser.read(32)
                 print(':'.join(x.encode('hex') for x in s))
-                print("Checking values:")
-                # Check if data header is correct
-                print("s0 " + s[0].encode('hex') + "s1 " + s[1].encode('hex') + "int " + str(int("42",16)).encode('hex'))
-                if s[0] == int("42",16) and s[1] == int("4d",16):
+                if s[0].encode('hex') == "4d" and s[1].encode('hex') == "4d":
                     print("Header is correct")
                     cs = (s[30] * 256 + s[31])   # check sum
                     # Calculate check sum value

@@ -113,6 +113,9 @@ class PLANTOWER(object):
                     print("Header is wrong")
             except ValueError:
                 continue
+            except Exception as e:
+                print(e)
+                continue
 
         if not pm1:
             return None

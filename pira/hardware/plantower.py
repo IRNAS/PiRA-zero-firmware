@@ -36,9 +36,10 @@ class PLANTOWER(object):
                 self.ser.flushInput()
                 self.ser.write([66, 77, 226, 0, 0, 1, 113])   # ask for data
                 s = self.ser.read(32)
-                #print(':'.join(x.encode('hex') for x in s))
+                print(':'.join(x.encode('hex') for x in s))
+                print("Checking values:")
                 # Check if data header is correct
-                print("s0 " + s[0].encode('hex') + "s1 " + s[1].encode('hex') + "int " + int("42",16).encode('hex'))
+                print("s0 " + s[0].encode('hex') + "s1 " + s[1].encode('hex') + "int " + str(int("42",16)).encode('hex'))
                 if s[0] == int("42",16) and s[1] == int("4d",16):
                     print("Header is correct")
                     cs = (s[30] * 256 + s[31])   # check sum
@@ -103,6 +104,8 @@ class PLANTOWER(object):
                         print("Number of particles:")
                         print(">0.3:", part_03, " >0.5:", part_05, " >1.0:", part_1, " >2.5:", part_25, " >5:", part_5, " >10:", part_10)
                         sleep(1)
+                else:
+                    print("Header is wrong")
             except ValueError:
                 continue
 

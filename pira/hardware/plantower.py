@@ -35,7 +35,7 @@ class PLANTOWER(object):
             try:
                 self.ser.flushInput()
                 self.ser.write([66, 77, 226, 0, 0, 1, 113])   # ask for data
-                s2 = self.ser.read(32)
+                s3 = self.ser.read(32)
                 print("s3 "+s3)
                 s2=':'.join(x.encode('hex') for x in s3)
                 print("s2 "+s2)

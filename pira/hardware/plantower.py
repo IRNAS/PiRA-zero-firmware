@@ -118,7 +118,7 @@ class PLANTOWER(object):
         print(">0.3:", np.mean(part_03), " >0.5:", np.mean(part_05), " >1.0:", np.mean(part_1), " >2.5:", np.mean(part_25), " >5:", np.mean(part_5), " >10:", np.mean(part_10))
         #sleep(1)
 
-        results = {np.mean(pm1_atm),np.mean(pm25_atm),np.mean(pm10_atm)}
+        results = [np.mean(pm1_atm),np.mean(pm25_atm),np.mean(pm10_atm)]
         return results
 
     def close(self):

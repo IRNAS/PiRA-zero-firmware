@@ -37,13 +37,14 @@ class PLANTOWER(object):
                 self.ser.write([66, 77, 226, 0, 0, 1, 113])   # ask for data
                 s = self.ser.read(32)
                 print(':'.join(x.encode('hex') for x in s))
+                print(type(s))
                 if s[0].encode('hex') == "42" and s[1].encode('hex') == "4d":
                     print("Header is correct")
                     cs = (s[30] * 256 + s[31])   # check sum
                     # Calculate check sum value
                     check = 0
                     for i in range(30):
-                        check += s[i]
+                        check += int(s[i])
                     # Check if check sum is correct
                     if check == cs:
                         # PM1, PM2.5 and PM10 values for standard particle in ug/m^3

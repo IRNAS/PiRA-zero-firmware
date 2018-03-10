@@ -107,7 +107,7 @@ class PLANTOWER(object):
             except ValueError:
                 continue
 
-        if not pm1:
+        if not pm1_atm:
             return None
 
         print("Standard particle:")

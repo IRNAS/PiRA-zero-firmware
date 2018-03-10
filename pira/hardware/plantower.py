@@ -36,13 +36,13 @@ class PLANTOWER(object):
                 self.ser.flushInput()
                 self.ser.write([66, 77, 226, 0, 0, 1, 113])   # ask for data
                 s2 = self.ser.read(32)
+                print("s3 "+s3)
+                s2=':'.join(x.encode('hex') for x in s3)
                 print("s2 "+s2)
-                s1=':'.join(x.encode('hex') for x in s2)
-                print("s1 "+s1)
+                s1 = s2.split(":")
                 s = []
-                #for index, item in enumerate(s1):
-                    #s.append(int(item,16))
-                print("s ")
+                for index, item in enumerate(s1):
+                    s.append(int(item,16))
                 print(s)
 
                 if s[0] == 0x42 and s[1] == 0x4d:

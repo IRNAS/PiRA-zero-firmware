@@ -42,6 +42,7 @@ class PLANTOWER(object):
                 s = []
                 for index, item in enumerate(s1):
                     s.append(int(item,16))
+                print("s ")
                 print(s)
 
                 if s[0] == 0x42 and s[1] == 0x4d:

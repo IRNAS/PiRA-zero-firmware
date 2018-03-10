@@ -35,10 +35,13 @@ class PLANTOWER(object):
             try:
                 self.ser.flushInput()
                 self.ser.write([66, 77, 226, 0, 0, 1, 113])   # ask for data
-                s = self.ser.read(32)
-                print(':'.join(x.encode('hex') for x in s))
-                print(type(s))
-                if s[0].encode('hex') == "42" and s[1].encode('hex') == "4d":
+                s2 = self.ser.read(32)
+                s1=':'.join(x.encode('hex') for x in s2)
+                s = []
+                for index, item in enumerate(s1):
+                    s.append(int(item,16))
+
+                if s[0] == 0x42 and s[1] == 0x4d:
                     print("Header is correct")
                     cs = (s[30] * 256 + s[31])   # check sum
                     # Calculate check sum value

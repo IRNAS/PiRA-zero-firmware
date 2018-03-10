@@ -24,14 +24,14 @@ class Module(object):
         self._driver = plantower.PLANTOWER(devices.PLANTOWER_UART)
 
     def process(self, modules):
-        """Measure distance."""
+        """Measure air."""
         self.measurements = self._driver.read()
         if self.measurements is None:
             print("ERROR: Plantower device not connected.")
             return
-        pm1 = measurements[0]
-        pm25 = measurements[1]
-        pm10 = measurements[2]
+        pm1 = self.measurements[0]
+        pm25 = self.measurements[1]
+        pm10 = self.measurements[2]
 
         # Record measurement in log.
         self._boot.log.insert(MEASUREMENT_PLANTOWER_PM1, self.pm1)

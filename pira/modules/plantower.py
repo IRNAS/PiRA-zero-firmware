@@ -29,7 +29,7 @@ class Module(object):
         print(pm1)
 
         # Record measurement in log.
-        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM1, 10)
+        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM1, int(pm1))
         self._boot.log.insert(MEASUREMENT_PLANTOWER_PM25, int(pm25))
         self._boot.log.insert(MEASUREMENT_PLANTOWER_PM10, int(pm10))
 

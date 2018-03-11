@@ -22,7 +22,7 @@ class Module(object):
     def process(self, modules):
         """Measure air."""
         pm1, pm25, pm10 = self._driver.read()
-        if self.pm1 is None:
+        if pm1 is None:
             print("ERROR: Plantower device not connected.")
             return
 

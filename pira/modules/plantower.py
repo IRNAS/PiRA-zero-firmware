@@ -4,13 +4,13 @@ from ..hardware import devices, plantower
 
 # Log events.
 LOG_PLANTOWER_PM1 = 'plantower.pm1'
-LOG_PLANTOWER_PM25 = 'plantower.pm25'
-LOG_PLANTOWER_PM10 = 'plantower.pm10'
+#LOG_PLANTOWER_PM25 = 'plantower.pm25'
+#LOG_PLANTOWER_PM10 = 'plantower.pm10'
 
 # Measurement configuration.
 MEASUREMENT_PLANTOWER_PM1 = MeasurementConfig(LOG_PLANTOWER_PM1, int)
-MEASUREMENT_PLANTOWER_PM25 = MeasurementConfig(LOG_PLANTOWER_PM25, int)
-MEASUREMENT_PLANTOWER_PM10 = MeasurementConfig(LOG_PLANTOWER_PM10, int)
+#MEASUREMENT_PLANTOWER_PM25 = MeasurementConfig(LOG_PLANTOWER_PM25, int)
+#MEASUREMENT_PLANTOWER_PM10 = MeasurementConfig(LOG_PLANTOWER_PM10, int)
 
 
 class Module(object):
@@ -30,8 +30,8 @@ class Module(object):
 
         # Record measurement in log.
         self._boot.log.insert(MEASUREMENT_PLANTOWER_PM1, int(pm1))
-        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM25, int(pm25))
-        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM10, int(pm10))
+        #self._boot.log.insert(MEASUREMENT_PLANTOWER_PM25, int(pm25))
+        #self._boot.log.insert(MEASUREMENT_PLANTOWER_PM10, int(pm10))
 
     def shutdown(self, modules):
         """Shutdown module."""

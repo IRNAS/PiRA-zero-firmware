@@ -8,9 +8,9 @@ LOG_PLANTOWER_PM25 = 'plantower.pm25'
 LOG_PLANTOWER_PM10 = 'plantower.pm10'
 
 # Measurement configuration.
-MEASUREMENT_PLANTOWER_PM1 = MeasurementConfig(LOG_PLANTOWER_PM1, int)
-MEASUREMENT_PLANTOWER_PM25 = MeasurementConfig(LOG_PLANTOWER_PM25, int)
-MEASUREMENT_PLANTOWER_PM10 = MeasurementConfig(LOG_PLANTOWER_PM10, int)
+MEASUREMENT_PLANTOWER_PM1 = MeasurementConfig(LOG_PLANTOWER_PM1, float)
+MEASUREMENT_PLANTOWER_PM25 = MeasurementConfig(LOG_PLANTOWER_PM25, float)
+MEASUREMENT_PLANTOWER_PM10 = MeasurementConfig(LOG_PLANTOWER_PM10, float)
 
 
 class Module(object):
@@ -30,9 +30,9 @@ class Module(object):
         pm10 = self.measurements[2]
 
         # Record measurement in log.
-        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM1, pm1)
-        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM25, pm25)
-        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM10, pm10)
+        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM1, float(pm1))
+        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM25, float(pm25))
+        self._boot.log.insert(MEASUREMENT_PLANTOWER_PM10, float(pm10))
 
     def shutdown(self, modules):
         """Shutdown module."""

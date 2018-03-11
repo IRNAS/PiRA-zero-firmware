@@ -7,6 +7,12 @@ LOG_PLANTOWER_PM1 = 'plantower.pm1'
 LOG_PLANTOWER_PM25 = 'plantower.pm25'
 LOG_PLANTOWER_PM10 = 'plantower.pm10'
 
+# Measurement configuration.
+MEASUREMENT_PLANTOWER_PM1 = MeasurementConfig(LOG_PLANTOWER_PM1, int)
+MEASUREMENT_PLANTOWER_PM25 = MeasurementConfig(LOG_PLANTOWER_PM25, int)
+MEASUREMENT_PLANTOWER_PM10 = MeasurementConfig(LOG_PLANTOWER_PM10, int)
+
+
 class Module(object):
 
     def __init__(self, boot):

@@ -21,7 +21,7 @@ class Module(object):
 
     def process(self, modules):
         """Measure air."""
-        pm1, pm25, pm10 = self._driver.read()
+        pm1, pm25, pm10 = self._driver.read(float(os.environ.get('PLANTOWER_CYCLE_DURATION', '10')))
         if pm1 is None:
             print("ERROR: Plantower device not connected.")
             return

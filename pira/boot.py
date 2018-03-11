@@ -259,7 +259,7 @@ class Boot(object):
                 self.shutdown = False
                 self._perform_shutdown()
 
-            time.sleep(os.environ.get('LOOP_DELAY', 30))
+            time.sleep(float(os.environ.get('LOOP_DELAY', "30")))
 
     def _update_charging(self):
         """Update charging status."""

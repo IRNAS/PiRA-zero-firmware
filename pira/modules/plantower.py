@@ -25,6 +25,8 @@ class Module(object):
         if pm1 is None:
             print("ERROR: Plantower device not connected.")
             return
+        print("pm1 ")
+        print(pm1)
 
         # Record measurement in log.
         self._boot.log.insert(MEASUREMENT_PLANTOWER_PM1, int(pm1))

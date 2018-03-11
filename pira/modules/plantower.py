@@ -21,14 +21,10 @@ class Module(object):
 
     def process(self, modules):
         """Measure air."""
-        self.measurements = self._driver.read()
+        pm1, pm25, pm10 = self._driver.read()
         if self.measurements is None:
             print("ERROR: Plantower device not connected.")
             return
-        pm1 = self.measurements[0]
-        print("pm1: " + pm1)
-        pm25 = self.measurements[1]
-        pm10 = self.measurements[2]
 
         # Record measurement in log.
         self._boot.log.insert(MEASUREMENT_PLANTOWER_PM1, int(pm1))

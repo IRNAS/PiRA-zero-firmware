@@ -25,8 +25,8 @@ class Module(object):
         if pm1 is None:
             print("ERROR: Plantower device not connected.")
             return
-        print("pm1 ")
-        print(pm1)
+        print("Air quality:")
+        print("PM1:", pm1, "ug/m^3  PM2.5:", pm25, "ug/m^3  PM10:", pm10, "ug/m^3")
 
         # Record measurement in log.
         self._boot.log.insert(LOG_PLANTOWER_PM1, int(pm1))

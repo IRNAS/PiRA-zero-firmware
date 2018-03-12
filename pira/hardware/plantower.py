@@ -108,7 +108,7 @@ class PLANTOWER(object):
                 continue
 
         if not pm1_atm:
-            return None
+            return None, None, None
 
         #print("Standard particle:")
         #print("PM1:", np.mean(pm1_std), "ug/m^3  PM2.5:", np.mean(pm25_std), "ug/m^3  PM10:", np.mean(pm10_std), "ug/m^3")

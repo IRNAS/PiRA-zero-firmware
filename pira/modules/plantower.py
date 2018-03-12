@@ -1,6 +1,7 @@
 from __future__ import print_function
 from ..messages import MeasurementConfig
 from ..hardware import devices, plantower
+import os
 
 # Log events.
 LOG_PLANTOWER_PM1 = 'plantower.pm1'

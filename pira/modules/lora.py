@@ -35,6 +35,7 @@ class Module(object):
             self._nws_key = self._decode_hex('LORA_NWS_KEY', length=16)
             self._apps_key = self._decode_hex('LORA_APPS_KEY', length=16)
             self._spread_factor = int(os.environ.get('LORA_SPREAD_FACTOR', '7'))
+            self._region = os.environ.get('LORA_REGION', 'EU')
             self._enabled = True
             self._initialize_lora_module()
         except:
@@ -65,7 +66,16 @@ class Module(object):
             self._lora = LoRa(verbose=False)
             self._lora.set_mode(lora.MODE.SLEEP)
             self._lora.set_dio_mapping([0, 0, 0, 0, 0, 0])
-            self._lora.set_freq(868.1)
+
+            if self._region == 'EU':
+                self._lora.set_freq(868.1)
+            elif self._region == 'US':
+                self._lora.set_freq(903.9)
+                self._lora.set_bw(7)
+            else:
+                # TODO: Raise error for unknown region.
+                self._lora.set_freq(868.1)
+
             self._lora.set_pa_config(pa_select=1)
             self._lora.set_spreading_factor(self._spread_factor)
             self._lora.set_pa_config(max_power=0x0F, output_power=0x0E)

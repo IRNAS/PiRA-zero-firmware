@@ -47,6 +47,8 @@ class Module(object):
         except OSError:
             pass
 
+        now = datetime.datetime.now()
+
         # Check how much space is left
         info = os.statvfs(CAMERA_STORAGE_PATH)
         free_space = (info.f_frsize * info.f_bavail / (1024.0 * 1024.0 * 1024.0))

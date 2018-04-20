@@ -21,9 +21,10 @@ class Module(object):
     def __init__(self, boot):
         self._boot = boot
         self._driver = ms5837.MS5837(model=1, bus=1)
-        if not self._driver.init():
-            print "Depth sensor could not be initialized"
-            self._driver.close()
+        self._driver.init()
+        #if not self._driver.init():
+            #print "Depth sensor could not be initialized"
+            #self._driver.close()
 
     def process(self, modules):
         # We have to read values from sensor to update pressure and temperature

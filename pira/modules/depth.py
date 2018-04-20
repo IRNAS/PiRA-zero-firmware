@@ -20,7 +20,7 @@ MEASUREMENT_DEPTH_TEMPERATURE = MeasurementConfig(LOG_DEPTH_TEMPERATURE, int)
 class Module(object):
     def __init__(self, boot):
         self._boot = boot
-        self._driver = ms5837.MS5837(model=ms5837.MS5837_MODEL_30BA, bus=1)
+        self._driver = ms5837.MS5837(model=1, bus=1)
 
     def process(self, modules):
         # We have to read values from sensor to update pressure and temperature

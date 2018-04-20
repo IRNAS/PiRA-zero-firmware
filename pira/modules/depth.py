@@ -43,7 +43,7 @@ class Module(object):
         self._boot.log.insert(LOG_DEPTH_DEPTH, int(depth))
         self._boot.log.insert(LOG_DEPTH_DEPTH, int(altitude))
         self._boot.log.insert(LOG_DEPTH_PRESSURE, int(pressure))
-        self._boot.log.insert(LOG_DEPTH_TEMPERATURE, int(ptemperaturem10))
+        self._boot.log.insert(LOG_DEPTH_TEMPERATURE, int(temperature))
 
     def shutdown(self, modules):
         """Shutdown module."""

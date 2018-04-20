@@ -26,7 +26,7 @@ class Module(object):
     def process(self, modules):
         # We have to read values from sensor to update pressure and temperature
         if not self._driver.read():
-            print "Depth sensor read failed!"
+            print("Depth sensor read failed!")
 
         pressure = self._driver.pressure(ms5837.UNITS_mbar)
         temperature = self._driver.temperature(ms5837.UNITS_Centigrade)

@@ -1,8 +1,7 @@
 from __future__ import print_function
-import ms5837
 import time
 from ..messages import MeasurementConfig
-from ..hardware import devices, plantower
+from ..hardware import devices, ms5837
 import os
 
 # Log events.

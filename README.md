@@ -1,5 +1,16 @@
 # PiRA-zero-firmware
-Firmware for PiRa Zero board implementing hardware interface functions.
+Firmware for PiRa Zero board implementing hardware interface functions with the named modulesl, running on http://resin.io backend:
+
+* pira.modules.scheduler - scheduled power-up of Raspberry Pi
+* pira.modules.ultrasonic - Maxbotix ultrasonic distance sensor measurements
+* pira.modules.plantower - air quality sensor Plantower sensor support 
+* pira modules.pressure -  pressure sensor TE-MS5837 support for underwater depth measurement
+* pira.modules.camera - image/video capture with Raspberry Pi camera
+* pira.modules.lora - LoraWAN communication for private and public networks, TheThingsNetwork supported as well
+* pira.modules.rockblock - RockBlock Iridium modem communication
+* pira.modules.debug - printing all the process flow in user-readable format
+* pira.modules.webserver - webserver access of all the files if WiFi/3G connection is available
+* logging of all measurements into SQlite database
 
 ## Software support for hardware features
  * USB charger BQ24296 I2c

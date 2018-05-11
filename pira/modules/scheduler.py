@@ -15,8 +15,6 @@ class Module(object):
         self._boot = boot
         self._ready = False
 
-        print("Sunrise at {}. Sunset at {}".format(self._parse_time("sunrise"),self._parse_time("sunset")))
-
         # Initialize schedule.
         if os.environ.get('SCHEDULE_MONTHLY', '0') == '1':
             # Month-dependent schedule.
@@ -61,8 +59,10 @@ class Module(object):
                 ))
 
                 if time == 'sunrise':
+                    print("Sunrise at {}.".format(self._parse_time("sunrise")))
                     return location.sunrise().time()
                 elif time == 'sunset':
+                    print("Sunset at {}".format(self._parse_time("sunset")))
                     return location.sunset().time()
             except (KeyError, ValueError):
                 pass

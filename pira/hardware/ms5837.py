@@ -83,6 +83,8 @@ class MS5837(object):
             print "PROM read error, CRC failed!"
             return False
 
+
+
         return True
 
     def read(self, oversampling=OSR_8192):

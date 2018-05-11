@@ -107,6 +107,9 @@ class Module(object):
         if 'pira.modules.ultrasonic' in modules:
             from .ultrasonic import MEASUREMENT_ULTRASONIC_DISTANCE
             measurements.append(MEASUREMENT_ULTRASONIC_DISTANCE)
+        if 'pira.modules.depth' in modules:
+            from .depth import MEASUREMENT_DEPTH_DEPTH
+            measurements.append(MEASUREMENT_DEPTH_DEPTH)
 
         message = create_measurements_message(self._boot, self._last_update, measurements)
         if not message:

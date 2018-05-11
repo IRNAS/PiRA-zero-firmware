@@ -46,6 +46,7 @@ class Boot(object):
         'pira.modules.webserver',
     ]
 
+
     def __init__(self):
         self.reason = Boot.BOOT_REASON_UNKNOWN
         self.shutdown = False

@@ -9,5 +9,9 @@ picamera==1.13
 numpy==1.13.3
 pycrypto==2.6.1
 requests==2.9.1
-paramiko==2.4.0
+paramiko==2.4.1
 PyYAML==3.12
+python-can
+iso8601
+m2x
+azure

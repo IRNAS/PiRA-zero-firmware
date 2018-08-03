@@ -42,7 +42,7 @@ class Boot(object):
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
         #'pira.modules.lora',
-        #'pira.modules.rockblock',
+        'pira.modules.rockblock',
         'pira.modules.nodewatcher',
         'pira.modules.debug',
         'pira.modules.m2x_plat',
@@ -248,9 +248,9 @@ class Boot(object):
                     traceback.print_exc()
 
             # Check if battery voltage is below threshold and shutdown
-            #if (self.sensor_mcp.get_voltage() <= os.environ.get('SHUTDOWN_VOLTAGE', '2.6')):
-             #   print("Voltage is under the threshold, need to shutdown.")
-              #  self.shutdown = True
+            if (self.sensor_mcp.get_voltage() <= os.environ.get('SHUTDOWN_VOLTAGE', '2.6')):
+                print("Voltage is under the threshold, need to shutdown.")
+                self.shutdown = True
 
             # Save state.
             try:

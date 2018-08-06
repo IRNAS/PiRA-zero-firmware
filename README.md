@@ -114,6 +114,17 @@ The following environment variables can be used to configure the firmware:
   * `NODEWATCHER_KEY`
 * Sensors
   * `MCP3021_RATIO` (default `0.0217`) is the conversion value between raw reading and voltage, measure and calibrate for more precise readings
+* CAN (MCP2515)
+  * `CAN_SPEED` (default 500000) is the speed of the CAN Bus
+* M2X
+  * `M2X_KEY` (must have) is the key of your M2X account
+  * `M2X_DEVICE_ID` (must have) is the device ID you are connecting to
+  * `M2X_NAME` (default `DEMO_PI`) is the name of the set of data
+* AZURE
+  * `AZURE_ACCOUNT_NAME` (must have) is the name 
+  * `AZURE_ACCOUNT_KEY` (must have) is the account key
+  * `AZURE_CONTAINER_NAME` (default ImageExample) is the container name in the blob
+
 
  ### Using without Resin.io
  To use on a standard Raspbian Lite image complete the following steps:
@@ -126,3 +137,16 @@ The following environment variables can be used to configure the firmware:
   cd PiRA-zero-firmware
   sudo -E ./start.sh
   ```
+ ### Using it with Resin.io Local Mode
+ To use it with Local Mode (Development) with Resin.io
+  * Download resin-cl
+  * Rename Dockerfile.template to `Dockerfile`
+  * Execute ```sudo ./resin local scan``` to scan the local network
+  * To push the firmware ```sudo ./resin local push ID_HERE -s LOCATION```
+  
+ Extra useful things:
+  * Enviroment variables place in: `.resin-sync.yml` like this: 
+	```
+	environment:
+		- AZURE_ACCOUNT_NAME=rpiimages
+	```

@@ -31,21 +31,27 @@ class Boot(object):
     BOOT_REASON_CHARGER = 'charger'
     BOOT_REASON_RTC = 'rtc'
 
+    # for some reason when m2x is after azure it doesnt init...
+
     # Modules that should be loaded.
     enabled_modules = [
         'pira.modules.scheduler',
         # Sensor modules.
-        'pira.modules.ultrasonic',
-        'pira.modules.camera',
+        #'pira.modules.ultrasonic',
+        #'pira.modules.camera',
         # Reporting modules should come after all sensor modules, so they can get
         # the latest values.
-        'pira.modules.lora',
+        #'pira.modules.lora',
         'pira.modules.rockblock',
         'pira.modules.nodewatcher',
         'pira.modules.debug',
+        'pira.modules.m2x_plat',
         'pira.modules.webserver',
+        #'pira.modules.can',
+        'pira.modules.azure_images',
+       
+        
     ]
-
 
     def __init__(self):
         self.reason = Boot.BOOT_REASON_UNKNOWN
